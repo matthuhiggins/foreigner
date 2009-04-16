@@ -1,5 +1,5 @@
-require 'connection_adapters/abstract/schema_definitions'
 require 'connection_adapters/abstract/schema_statements'
+require 'connection_adapters/abstract/schema_definitions'
 require 'connection_adapters/mysql_adapter'
 
 module ActiveRecord

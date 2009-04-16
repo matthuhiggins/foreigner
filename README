@@ -44,7 +44,6 @@ For example, given the following model:
 You should add a foreign key in your migration:
 
   add_foreign_key(:comments, :posts)
-  # => "ALTER TABLE `comments` ADD CONSTRAINT `comments_post_id_fk` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`)"
 
 The :dependent option can be moved from the has_many definition to the foreign key:
 
