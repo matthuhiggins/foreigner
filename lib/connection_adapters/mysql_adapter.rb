@@ -7,13 +7,16 @@ module Foreigner
     def add_foreign_key(from_table, to_table, options = {})
       column  = options[:column] || "#{to_table.to_s.singularize}_id"
       dependency = dependency_sql(options[:dependent])
+      foreign_key_name = foreign_key_name(from_table, column, options)
       
-      execute %{
-        ALTER TABLE #{from_table}
-        ADD CONSTRAINT #{foreign_key_name(from_table, column, options)}
-        FOREIGN KEY (#{column}) REFERENCES #{to_table}(id)
-        #{dependency}
-      }
+      sql =
+        "ALTER TABLE #{quote_table_name(from_table)} " +
+        "ADD CONSTRAINT #{quote_column_name(foreign_key_name)} " +
+        "FOREIGN KEY (#{quote_column_name(column)}) REFERENCES #{quote_table_name(to_table)}(id)"
+      
+      sql << " #{dependency}" unless dependency.blank?
+      
+      execute(sql)
     end
 
     def remove_foreign_key(table, options)        
@@ -23,7 +26,7 @@ module Foreigner
         foreign_key_name = foreign_key_name(table, "#{options.to_s.singularize}_id")
       end
 
-      execute "ALTER TABLE #{table} DROP FOREIGN KEY #{foreign_key_name}"
+      execute "ALTER TABLE #{quote_table_name(table)} DROP FOREIGN KEY #{quote_column_name(foreign_key_name)}"
     end
 
     private
