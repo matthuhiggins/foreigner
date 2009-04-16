@@ -1,0 +1,65 @@
+Foreigner
+=========
+
+Rails migrations do not have methods to add foreign keys. Foreigner introduces a few
+methods to your migrations for adding and removing foreign key constraints.
+
+Since each adapter implements the API, migrations using Foreigner will continue to
+work on databases that do not support foreign keys, such as sqlite.
+
+
+API
+===
+
+An adapter implementing the Foreigner API must implement two methods.
+(Options are documented in connection_adapters/abstract/schema_definitions.rb):
+
+  add_foreign_key(from_table, to_table, options)
+  remove_foreign_key(from_table, options)
+
+Foreigner also provides extra behavior to 'change_table'. This simply leverages
+the implementation of 'add_foreign_key' and 'remove_foreign_key':
+  ...
+  change_table [table_name] do |t|
+    t.foreign_key [to_table], options
+    t.remove_foreign_key [to_table], options
+  end
+  ...
+
+
+Example
+=======
+
+The most common use of foreign keys is to reference a table that a model belongs to.
+For example, given the following model:
+
+  class Comment < ActiveRecord::Base
+    belongs_to :post
+  end
+  
+  class Post < ActiveRecord::Base
+    has_many :comments, :dependent => :delete_all
+  end
+  
+You should add a foreign key in your migration:
+
+  add_foreign_key(:comments, :posts)
+  # => "ALTER TABLE `comments` ADD CONSTRAINT `comments_post_id_fk` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`)"
+
+The :dependent option can be moved from the has_many definition to the foreign key:
+
+  add_foreign_key(:comments, :posts, :dependent => :delete)
+
+If the column is named article_id instead of post_id, use the :column option:
+
+  add_foreign_key(:comments, :posts, :column => 'article_id')
+
+Foreign keys can also be generated using 'change_table':
+
+  change_table :comments do |t|
+    t.foreign_key :posts, :dependent => :delete, :name => 'comments_to_posts'
+  end
+  
+Foreigner should work for those using singular table names. See the rdocs for more details.
+
+Copyright (c) 2009 [Matthew Higgins], released under the MIT license
