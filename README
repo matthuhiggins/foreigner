@@ -57,10 +57,12 @@ Foreign keys can be generated using 'create_table' and 'change_table':
 
   create_table :comments do |t|
     t.foreign_key :posts
+    t.references :user
   end
 
   change_table :comments do |t|
     t.foreign_key :posts, :dependent => :delete, :name => 'comments_to_posts'
+    t.references :user, :dependent => :delete
   end
   
 Foreigner should work for those using singular table names. See the rdocs for more details.
