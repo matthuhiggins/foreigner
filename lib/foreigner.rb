@@ -12,7 +12,9 @@ module ActiveRecord
       include Foreigner::MysqlAdapter
     end
 
-    class TableDefinition
+    TableDefinition.class_eval do
+      include Foreigner::TableDefinition
+
       Table.class_eval do
         include Foreigner::TableMethods
       end

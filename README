@@ -53,7 +53,11 @@ If the column is named article_id instead of post_id, use the :column option:
 
   add_foreign_key(:comments, :posts, :column => 'article_id')
 
-Foreign keys can also be generated using 'change_table':
+Foreign keys can be generated using 'create_table' and 'change_table':
+
+  create_table :comments do |t|
+    t.foreign_key :posts
+  end
 
   change_table :comments do |t|
     t.foreign_key :posts, :dependent => :delete, :name => 'comments_to_posts'
