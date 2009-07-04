@@ -45,7 +45,7 @@ module Foreigner
       end
       
       def to_sql_with_foreign_keys
-        to_sql_without_foreign_keys + ', ' + (foreign_keys * ', ')
+        to_sql_without_foreign_keys + (foreign_keys.empty? ? '' : ', ' + (foreign_keys * ', '))
       end
       
       private
