@@ -27,7 +27,7 @@ module Foreigner
       def references_with_foreign_keys(*args)
         options = args.extract_options!
         args.each { |to_table| foreign_key(to_table, options) } unless options[:polymorphic]
-        references_without_foreign_key(*(args << options))
+        references_without_foreign_keys(*(args << options))
       end
     
       # Defines a foreign key for the table. +to_table+ can be a single Symbol, or
@@ -102,7 +102,7 @@ module Foreigner
       def references_with_foreign_keys(*args)
         options = args.extract_options!
         polymorphic = options[:polymorphic]
-        references_without_foreign_key(*(args << options))
+        references_without_foreign_keys(*(args << options))
 
         args.each { |to_table| foreign_key(to_table, options) } unless polymorphic
       end
