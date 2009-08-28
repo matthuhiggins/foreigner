@@ -6,28 +6,28 @@ class MysqlAdapterTest < ActiveRecord::TestCase
   def test_add_without_options
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id)",
-      add_foreign_key(:employees, :company)
+      add_foreign_key(:employees, :companies)
     )
   end
   
   def test_add_with_name
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `favorite_company_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id)",
-      add_foreign_key(:employees, :company, :name => 'favorite_company_fk')
+      add_foreign_key(:employees, :companies, :name => 'favorite_company_fk')
     )
   end
   
   def test_add_with_column
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `employees_last_employer_id_fk` FOREIGN KEY (`last_employer_id`) REFERENCES `companies`(id)",
-      add_foreign_key(:employees, :company, :column => 'last_employer_id')
+      add_foreign_key(:employees, :companies, :column => 'last_employer_id')
     ) 
   end
   
   def test_add_with_column_and_name
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `favorite_company_fk` FOREIGN KEY (`last_employer_id`) REFERENCES `companies`(id)",
-      add_foreign_key(:employees, :company, :column => 'last_employer_id', :name => 'favorite_company_fk')
+      add_foreign_key(:employees, :companies, :column => 'last_employer_id', :name => 'favorite_company_fk')
     )
   end
   
@@ -35,7 +35,7 @@ class MysqlAdapterTest < ActiveRecord::TestCase
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
       "ON DELETE CASCADE",
-      add_foreign_key(:employees, :company, :dependent => :delete)
+      add_foreign_key(:employees, :companies, :dependent => :delete)
     )
   end
   
@@ -43,7 +43,7 @@ class MysqlAdapterTest < ActiveRecord::TestCase
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
       "ON DELETE SET NULL",
-      add_foreign_key(:employees, :company, :dependent => :nullify)
+      add_foreign_key(:employees, :companies, :dependent => :nullify)
     )
   end
   
