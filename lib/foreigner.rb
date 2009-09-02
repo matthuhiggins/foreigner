@@ -15,10 +15,10 @@ module ActiveRecord
 
     TableDefinition.class_eval do
       include Foreigner::TableDefinition
+    end
 
-      Table.class_eval do
-        include Foreigner::Table
-      end
+    Table.class_eval do
+      include Foreigner::Table
     end
   end
   
