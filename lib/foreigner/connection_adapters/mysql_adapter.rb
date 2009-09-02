@@ -37,18 +37,28 @@ module Foreigner
     
     def foreign_keys(table_name)
       foreign_keys = []
-      result = select_all %{
-        select fk.referenced_table_name as 'to_table'
+      fk_info = select_all %{
+        SELECT fk.referenced_table_name as 'to_table'
               ,fk.column_name as 'column'
               ,fk.constraint_name as 'name'
-        from information_schema.key_column_usage fk
-        where fk.referenced_column_name is not null
-          and fk.table_schema = '#{@config[:database]}'
-          and fk.table_name = '#{table_name}'
-      }      
+        FROM information_schema.key_column_usage fk
+        WHERE fk.referenced_column_name is not null
+          AND fk.table_schema = '#{@config[:database]}'
+          AND fk.table_name = '#{table_name}'
+      }
 
-      result.each do |row|
-        foreign_keys << ForeignKeyDefinition.new(table_name, row['to_table'], :column => row['column'], :name => row['name'])
+      create_table_info = select_one("SHOW CREATE TABLE #{quote_table_name(table_name)}")["Create Table"]
+
+      fk_info.each do |row|
+        options = {:column => row['column'], :name => row['name']}
+        if create_table_info =~ /CONSTRAINT #{quote_column_name(row['name'])} FOREIGN KEY .* REFERENCES .* ON DELETE (CASCADE|SET NULL)/
+          if $1 == 'CASCADE'
+            options[:dependent] = :delete
+          elsif $1 == 'SET NULL'
+            options[:dependent] = :nullify
+          end
+        end
+        foreign_keys << ForeignKeyDefinition.new(table_name, row['to_table'], options)
       end
       
       foreign_keys
