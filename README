@@ -1,34 +1,24 @@
 Foreigner
 =========
 
-Rails migrations do not have methods to add foreign keys. Foreigner introduces a few
+Rails does not come with methods to add foreign keys. Foreigner introduces a few
 methods to your migrations for adding and removing foreign key constraints.
 
 Since each adapter implements the API, migrations using Foreigner will continue to
-work on databases that do not support foreign keys, such as sqlite.
-
+work on databases that do not support foreign keys, such as sqlite3.
 
 API
-===
+---
 
-An adapter implementing the Foreigner API must implement two methods.
+An adapter implementing the Foreigner API implements three methods.
 (Options are documented in connection_adapters/abstract/schema_definitions.rb):
 
   add_foreign_key(from_table, to_table, options)
   remove_foreign_key(from_table, options)
-
-Foreigner also provides extra behavior to 'change_table'. This simply leverages
-the implementation of 'add_foreign_key' and 'remove_foreign_key':
-  ...
-  change_table [table_name] do |t|
-    t.foreign_key [to_table], options
-    t.remove_foreign_key [to_table], options
-  end
-  ...
-
+  foreign_keys(table_name)
 
 Example
-=======
+-------
 
 The most common use of foreign keys is to reference a table that a model belongs to.
 For example, given the following model:
@@ -52,19 +42,54 @@ The :dependent option can be moved from the has_many definition to the foreign k
 If the column is named article_id instead of post_id, use the :column option:
 
   add_foreign_key(:comments, :posts, :column => 'article_id')
-
-Foreign keys can be generated using 'create_table' and 'change_table':
-
-  create_table :comments do |t|
-    t.foreign_key :posts
-    t.references :user
-  end
-
-  change_table :comments do |t|
-    t.foreign_key :posts, :dependent => :delete, :name => 'comments_to_posts'
-    t.references :user, :dependent => :delete
-  end
   
-Foreigner should work for those using singular table names. See the rdocs for more details.
+Lastly, a name can be specified for the foreign key constraint:
 
-Copyright (c) 2009 [Matthew Higgins], released under the MIT license
+  add_foreign_key(:comments, :posts, :name => 'comment_article_foreign_key')
+
+Create/Change Table Shorthand
+=============================
+
+Foreign adds extra behavior to create_table and change_table, which lets you define foreign keys using shorthand.
+
+Create the comments table with a foreign key to posts:
+
+create_table :comments do |t|
+  t.integer :post_id
+  t.foreign_key :posts
+end
+
+Add a missing foreign key to comments:
+
+change_table :comments do |t|
+  t.foreign_key :posts, :dependent => :delete
+end
+
+t.foreign_key accepts the same options as add_foreign_key.
+
+
+Additional t.references option
+------------------------------
+
+Foreigner extends table.references with the :foreign_key option. Pass true, and the default
+foreign key options are used:
+
+create_table :comments do |t|
+  t.references :post, :foreign_key => true
+end
+
+An options hash can also be passed. It accepts the same options as add_foreign_key:
+
+change_table :comments do |t|
+  t.references :author, :foreign_key => {:dependent => :destroy}
+end
+
+By default, t.references will not generate a foreign key.
+
+schema.rb
+---------
+
+Similar to indexes, the foreign keys in your database are automatically dumped to schema.rb.
+This allows you to use foreign keys without fighting Rails!
+
+Copyright (c) 2009 Matthew Higgins, released under the MIT license
