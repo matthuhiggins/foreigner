@@ -16,7 +16,7 @@ module ActiveRecord
       include Foreigner::TableDefinition
 
       Table.class_eval do
-        include Foreigner::TableMethods
+        include Foreigner::Table
       end
     end
   end

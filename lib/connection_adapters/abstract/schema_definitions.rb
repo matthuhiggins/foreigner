@@ -47,7 +47,7 @@ module Foreigner
       
       def to_sql_with_foreign_keys
         sql = to_sql_without_foreign_keys
-        sql << (foreign_keys * ', ') if foreign_keys.present?
+        sql << ', ' << (foreign_keys * ', ') if foreign_keys.present?
         sql
       end
       
@@ -58,7 +58,7 @@ module Foreigner
     end
   end
 
-  module TableMethods
+  module Table
     def self.included(base)
       base.class_eval do
         include InstanceMethods
@@ -66,7 +66,7 @@ module Foreigner
       end
     end
 
-      module InstanceMethods
+    module InstanceMethods
       # Adds a new foreign key to the table. +to_table+ can be a single Symbol, or
       # an Array of Symbols. See SchemaStatements#add_foreign_key
       #
