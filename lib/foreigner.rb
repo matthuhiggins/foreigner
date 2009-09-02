@@ -1,6 +1,7 @@
-require 'connection_adapters/abstract/schema_statements'
-require 'connection_adapters/abstract/schema_definitions'
-require 'connection_adapters/mysql_adapter'
+require 'foreigner/connection_adapters/abstract/schema_statements'
+require 'foreigner/connection_adapters/abstract/schema_definitions'
+require 'foreigner/connection_adapters/mysql_adapter'
+require 'foreigner/schema_dumper'
 
 module ActiveRecord
   module ConnectionAdapters
@@ -19,5 +20,9 @@ module ActiveRecord
         include Foreigner::Table
       end
     end
+  end
+  
+  SchemaDumper.class_eval do
+    include Foreigner::SchemaDumper
   end
 end

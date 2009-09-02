@@ -34,6 +34,25 @@ module Foreigner
 
       execute "ALTER TABLE #{quote_table_name(table)} DROP FOREIGN KEY #{quote_column_name(foreign_key_name)}"
     end
+    
+    def foreign_keys(table_name)
+      foreign_keys = []
+      result = select_all %{
+        select fk.referenced_table_name as 'to_table'
+              ,fk.column_name as 'column'
+              ,fk.constraint_name as 'name'
+        from information_schema.key_column_usage fk
+        where fk.referenced_column_name is not null
+          and fk.table_schema = '#{@config[:database]}'
+          and fk.table_name = '#{table_name}'
+      }      
+
+      result.each do |row|
+        foreign_keys << ForeignKeyDefinition.new(table_name, row['to_table'], :column => row['column'], :name => row['name'])
+      end
+      
+      foreign_keys
+    end
 
     private
       def foreign_key_name(table, column, options = {})

@@ -53,5 +53,10 @@ module Foreigner
     #   remove_foreign_key :accounts, :name => :party_foreign_key
     def remove_foreign_key(from_table, options)
     end
+    
+    # Return the foreign keys for the schema_dumper
+    def foreign_keys(table_name)
+      []
+    end
   end
 end
