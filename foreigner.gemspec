@@ -2,7 +2,7 @@
  
 Gem::Specification.new do |s|
   s.name = %q{foreigner}
-  s.version = "0.1.0"
+  s.version = "0.2.0"
  
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matthew Higgins"]
@@ -17,7 +17,9 @@ Gem::Specification.new do |s|
     lib/foreigner
     lib/foreigner/schema_dumper.rb
     lib/foreigner/connection_adapters
+    lib/foreigner/connection_adapters/sql_2003.rb
     lib/foreigner/connection_adapters/mysql_adapter.rb
+    lib/foreigner/connection_adapters/postgresql_adapter.rb
     lib/foreigner/connection_adapters/abstract/schema_definitions.rb
     lib/foreigner/connection_adapters/abstract/schema_statements.rb
     test/helper.rb
