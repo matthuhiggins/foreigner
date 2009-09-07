@@ -1,16 +1,11 @@
 require 'foreigner/connection_adapters/abstract/schema_statements'
 require 'foreigner/connection_adapters/abstract/schema_definitions'
-require 'foreigner/connection_adapters/mysql_adapter'
 require 'foreigner/schema_dumper'
 
 module ActiveRecord
   module ConnectionAdapters
     AbstractAdapter.class_eval do
       include Foreigner::AdapterMethods
-    end
-    
-    MysqlAdapter.class_eval do
-      include Foreigner::MysqlAdapter
     end
 
     TableDefinition.class_eval do
@@ -24,5 +19,11 @@ module ActiveRecord
   
   SchemaDumper.class_eval do
     include Foreigner::SchemaDumper
+  end
+  
+  Base.class_eval do
+    if ['MySQL', 'PostgreSQL'].include? connection.adapter_name
+      require "foreigner/connection_adapters/#{connection.adapter_name.downcase}_adapter"
+    end
   end
 end
