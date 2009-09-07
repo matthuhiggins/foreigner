@@ -7,6 +7,17 @@ methods to your migrations for adding and removing foreign key constraints.
 Since each adapter implements the API, migrations using Foreigner will continue to
 work on databases that do not support foreign keys, such as sqlite3.
 
+Installation
+------------
+
+Install as a plugin:
+
+  ruby script/plugin install git://github.com/matthuhiggins/foreigner.git
+
+Install as a gem by adding the following to environment.rb:
+
+  config.gem "matthuhiggins-foreigner", :lib => "foreigner"
+
 API
 ---
 
@@ -48,9 +59,9 @@ Lastly, a name can be specified for the foreign key constraint:
   add_foreign_key(:comments, :posts, :name => 'comment_article_foreign_key')
 
 Create/Change Table Shorthand
-=============================
+-----------------------------
 
-Foreign adds extra behavior to create_table and change_table, which lets you define foreign keys using shorthand.
+Foreigner adds extra behavior to create_table and change_table, which lets you define foreign keys using shorthand.
 
 Create the comments table with a foreign key to posts:
 
