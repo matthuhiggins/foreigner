@@ -67,8 +67,10 @@ module Foreigner
         # ====== Creating a named foreign key
         #  t.foreign_key(:people, :column => :sender_id, :name => 'sender_foreign_key')
         def foreign_key(to_table, options = {})
-          to_table = to_table.to_s.pluralize if ActiveRecord::Base.pluralize_table_names
-          foreign_keys << ForeignKey.new(@base, to_table, options)
+          if @base.supports_foreign_keys?
+            to_table = to_table.to_s.pluralize if ActiveRecord::Base.pluralize_table_names
+            foreign_keys << ForeignKey.new(@base, to_table, options)
+          end
         end
       
         def to_sql_with_foreign_keys
