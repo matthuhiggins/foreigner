@@ -4,17 +4,8 @@ require 'foreigner/schema_dumper'
 
 module ActiveRecord
   module ConnectionAdapters
-    AbstractAdapter.class_eval do
-      include Foreigner::AdapterMethods
-    end
-
-    TableDefinition.class_eval do
-      include Foreigner::TableDefinition
-    end
-
-    Table.class_eval do
-      include Foreigner::Table
-    end
+    include Foreigner::ConnectionAdapters::SchemaStatements
+    include Foreigner::ConnectionAdapters::SchemaDefinitions
   end
   
   SchemaDumper.class_eval do
