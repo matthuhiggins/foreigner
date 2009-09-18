@@ -7,30 +7,30 @@ module Foreigner
       
       def foreign_keys(table_name)
         fk_info = select_all %{
-          select tc.constraint_name as name
+          SELECT tc.constraint_name as name
                 ,ccu.table_name as to_table
                 ,kcu.column_name as column
                 ,rc.delete_rule as dependency
-          from information_schema.table_constraints tc
-          join information_schema.key_column_usage kcu
-          using (constraint_catalog, constraint_schema, constraint_name)
-          join information_schema.referential_constraints rc
-          using (constraint_catalog, constraint_schema, constraint_name)
-          join information_schema.constraint_column_usage ccu
-          using (constraint_catalog, constraint_schema, constraint_name)
-          where tc.constraint_type = 'FOREIGN KEY'
-            and tc.constraint_catalog = '#{@config[:database]}'
-            and tc.table_name = '#{table_name}'
+          FROM information_schema.table_constraints tc
+          JOIN information_schema.key_column_usage kcu
+          USING (constraint_catalog, constraint_schema, constraint_name)
+          JOIN information_schema.referential_constraints rc
+          USING (constraint_catalog, constraint_schema, constraint_name)
+          JOIN information_schema.constraint_column_usage ccu
+          USING (constraint_catalog, constraint_schema, constraint_name)
+          WHERE tc.constraint_type = 'FOREIGN KEY'
+            AND tc.constraint_catalog = '#{@config[:database]}'
+            AND tc.table_name = '#{table_name}'
         }
         
-        fk_info.inject([]) do |foreign_keys, row|
+        fk_info.map do |row|
           options = {:column => row['column'], :name => row['name']}
           if row['dependency'] == 'CASCADE'
             options[:dependent] = :delete
           elsif row['dependency'] == 'SET NULL'
             options[:dependent] = :nullify
           end
-          foreign_keys << ForeignKeyDefinition.new(table_name, row['to_table'], options)
+          ForeignKeyDefinition.new(table_name, row['to_table'], options)
         end
       end
     end
