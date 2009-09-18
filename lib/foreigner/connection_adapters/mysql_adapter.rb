@@ -1,5 +1,3 @@
-require 'foreigner/connection_adapters/sql_2003'
-
 module Foreigner
   module ConnectionAdapters
     module MysqlAdapter

@@ -1,5 +1,6 @@
 require 'foreigner/connection_adapters/abstract/schema_statements'
 require 'foreigner/connection_adapters/abstract/schema_definitions'
+require 'foreigner/connection_adapters/sql_2003'
 require 'foreigner/schema_dumper'
 
 module ActiveRecord
