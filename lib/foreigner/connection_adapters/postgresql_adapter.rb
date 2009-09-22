@@ -23,8 +23,7 @@ module Foreigner
         }
         
         fk_info.map do |row|
-          options = {:column => row['column'], :name => row['name']}
-          options[:primary_key] = row['primary_key'] unless row['primary_key'] == 'id'
+          options = {:column => row['column'], :name => row['name'], :primary_key = row['primary_key']}
 
           if row['dependency'] == 'CASCADE'
             options[:dependent] = :delete
