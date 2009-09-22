@@ -19,10 +19,10 @@ module Foreigner
     
       def foreign_key_definition(to_table, options = {})
         column  = options[:column] || "#{to_table.to_s.singularize}_id"
-        to_column = options[:to_column] || "id"
+        primary_key = options[:primary_key] || "id"
         dependency = dependency_sql(options[:dependent])
 
-        sql = "FOREIGN KEY (#{quote_column_name(column)}) REFERENCES #{quote_table_name(to_table)}(#{to_column})"
+        sql = "FOREIGN KEY (#{quote_column_name(column)}) REFERENCES #{quote_table_name(to_table)}(#{primary_key})"
         sql << " #{dependency}" unless dependency.blank?
         sql
       end

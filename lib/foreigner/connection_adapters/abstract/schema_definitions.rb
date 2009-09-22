@@ -66,6 +66,8 @@ module Foreigner
         #  t.foreign_key(:people, :column => :sender_id)
         # ====== Creating a named foreign key
         #  t.foreign_key(:people, :column => :sender_id, :name => 'sender_foreign_key')
+        # ====== Defining the column of the +to_table+.
+        #  t.foreign_key(:people, :column => :sender_id, :primary_key => :person_id)
         def foreign_key(to_table, options = {})
           if @base.supports_foreign_keys?
             to_table = to_table.to_s.pluralize if ActiveRecord::Base.pluralize_table_names
@@ -105,6 +107,8 @@ module Foreigner
         #  t.foreign_key(:people, :column => :sender_id)
         # ====== Creating a named foreign key
         #  t.foreign_key(:people, :column => :sender_id, :name => 'sender_foreign_key')
+        # ====== Defining the column of the +to_table+.
+        #  t.foreign_key(:people, :column => :sender_id, :primary_key => :person_id)
         def foreign_key(to_table, options = {})
           @base.add_foreign_key(@table_name, to_table, options)
         end

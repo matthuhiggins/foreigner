@@ -22,6 +22,9 @@ module Foreigner
               statement_parts = [ ('add_foreign_key ' + foreign_key.from_table.inspect) ]
               statement_parts << foreign_key.to_table.inspect
               statement_parts << (':column => ' + foreign_key.options[:column].inspect)
+              if foreign_key.options[:primary_key].present?
+                statement_parts << (':primary_key => ' + foreign_key.options[:primary_key].inspect)
+              end
               statement_parts << (':name => ' + foreign_key.options[:name].inspect)
               if foreign_key.options[:dependent].present?
                 statement_parts << (':dependent => ' + foreign_key.options[:dependent].inspect)

@@ -6,6 +6,7 @@ module Foreigner
       def foreign_keys(table_name)
         fk_info = select_all %{
           SELECT fk.referenced_table_name as 'to_table'
+                ,fk.referenced_column_name as 'primary_key'
                 ,fk.column_name as 'column'
                 ,fk.constraint_name as 'name'
           FROM information_schema.key_column_usage fk
@@ -18,6 +19,8 @@ module Foreigner
 
         fk_info.map do |row|
           options = {:column => row['column'], :name => row['name']}
+          options[:primary_key] = row['primary_key'] unless row['primary_key'] == 'id'
+
           if create_table_info =~ /CONSTRAINT #{quote_column_name(row['name'])} FOREIGN KEY .* REFERENCES .* ON DELETE (CASCADE|SET NULL)/
             if $1 == 'CASCADE'
               options[:dependent] = :delete

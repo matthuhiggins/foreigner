@@ -43,6 +43,9 @@ module Foreigner
       #   Specify the column name on the from_table that references the to_table. By default this is guessed
       #   to be the singular name of the to_table with "_id" suffixed. So a to_table of :posts will use "post_id"
       #   as the default <tt>:column</tt>.
+      # [:primary_key]
+      #   Specify the column name on the to_table that is referenced by this foreign key. By default this is
+      #   assumed to be "id".
       # [:name]
       #   Specify the name of the foreign key constraint. This defaults to use from_table and foreign key column.
       # [:dependent]

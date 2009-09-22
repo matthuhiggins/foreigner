@@ -7,6 +7,7 @@ module Foreigner
         fk_info = select_all %{
           SELECT tc.constraint_name as name
                 ,ccu.table_name as to_table
+                ,ccu.column_name as primary_key
                 ,kcu.column_name as column
                 ,rc.delete_rule as dependency
           FROM information_schema.table_constraints tc
@@ -23,6 +24,8 @@ module Foreigner
         
         fk_info.map do |row|
           options = {:column => row['column'], :name => row['name']}
+          options[:primary_key] = row['primary_key'] unless row['primary_key'] == 'id'
+
           if row['dependency'] == 'CASCADE'
             options[:dependent] = :delete
           elsif row['dependency'] == 'SET NULL'
