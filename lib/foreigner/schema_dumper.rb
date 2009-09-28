@@ -23,7 +23,7 @@ module Foreigner
               statement_parts << foreign_key.to_table.inspect
               statement_parts << (':name => ' + foreign_key.options[:name].inspect)
               
-              if foreign_key.options[:column] != "#{to_table.singularize}_id"
+              if foreign_key.options[:column] != "#{foreign_key.to_table.singularize}_id"
                 statement_parts << (':column => ' + foreign_key.options[:column].inspect)
               end
               if foreign_key.options[:primary_key] != 'id'
