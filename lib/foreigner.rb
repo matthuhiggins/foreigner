@@ -14,7 +14,7 @@ module ActiveRecord
   end
   
   Base.class_eval do
-    if %w(MySQL PostgreSQL).include? connection.adapter_name
+    if %w(MySQL PostgreSQL).include? connection_pool.spec.config[:adapter]
       require "foreigner/connection_adapters/#{connection.adapter_name.downcase}_adapter"
     end
   end
