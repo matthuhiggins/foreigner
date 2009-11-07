@@ -16,7 +16,7 @@ Install as a plugin:
 
 Install as a gem by adding the following to environment.rb:
 
-  config.gem "matthuhiggins-foreigner", :lib => "foreigner"
+  config.gem "matthuhiggins-foreigner", :lib => "foreigner", :source => http://gemcutter.org
 
 API
 ---
