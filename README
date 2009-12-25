@@ -61,14 +61,7 @@ Lastly, a name can be specified for the foreign key constraint:
 Create/Change Table Shorthand
 -----------------------------
 
-Foreigner adds extra behavior to create_table and change_table, which lets you define foreign keys using shorthand.
-
-Create the comments table with a foreign key to posts:
-
-create_table :comments do |t|
-  t.integer :post_id
-  t.foreign_key :posts
-end
+Foreigner adds extra behavior to change_table, which lets you define foreign keys using shorthand.
 
 Add a missing foreign key to comments:
 
@@ -85,7 +78,7 @@ Additional t.references option
 Foreigner extends table.references with the :foreign_key option. Pass true, and the default
 foreign key options are used:
 
-create_table :comments do |t|
+change_table :comments do |t|
   t.references :post, :foreign_key => true
 end
 
