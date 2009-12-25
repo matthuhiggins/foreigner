@@ -103,7 +103,7 @@ module Foreigner
           polymorphic = options[:polymorphic]
           fk_options = options.delete(:foreign_key)
 
-          references_without_foreign_keys(*(args << options))
+          references_without_foreign_keys(*(args.dup << options))
 
           if fk_options && !polymorphic
             fk_options = {} if fk_options == true
