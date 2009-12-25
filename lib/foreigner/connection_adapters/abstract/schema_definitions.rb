@@ -1,5 +1,8 @@
 module Foreigner
   module ConnectionAdapters
+    class ForeignKeyDefinition < Struct.new(:from_table, :to_table, :options) #:nodoc:
+    end
+    
     module SchemaDefinitions
       def self.included(base)
         base::TableDefinition.class_eval do
@@ -13,13 +16,6 @@ module Foreigner
     end
   
     module TableDefinition
-      class ForeignKey < Struct.new(:base, :to_table, :options)
-        def to_sql
-          base.foreign_key_definition(to_table, options)
-        end
-        alias to_s :to_sql
-      end
-
       def self.included(base)
         base.class_eval do
           include InstanceMethods
