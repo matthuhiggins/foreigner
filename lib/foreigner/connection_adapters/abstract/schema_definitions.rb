@@ -1,8 +1,5 @@
 module Foreigner
   module ConnectionAdapters
-    class ForeignKeyDefinition < Struct.new(:from_table, :to_table, :options) #:nodoc:
-    end
-
     module SchemaDefinitions
       def self.included(base)
         base::TableDefinition.class_eval do
@@ -27,64 +24,28 @@ module Foreigner
         base.class_eval do
           include InstanceMethods
           alias_method_chain :references, :foreign_keys
-          alias_method_chain :to_sql, :foreign_keys
         end
       end
     
       module InstanceMethods
-        # Adds a :foreign_key option to TableDefinition.references.
-        # If :foreign_key is true, a foreign key constraint is added to the table.
-        # You can also specify a hash, which is passed as foreign key options.
-        # 
-        # ===== Examples
-        # ====== Add goat_id column and a foreign key to the goats table.
-        #  t.references(:goat, :foreign_key => true)
-        # ====== Add goat_id column and a cascading foreign key to the goats table.
-        #  t.references(:goat, :foreign_key => {:dependent => :delete})
-        # 
-        # Note: No foreign key is created if :polymorphic => true is used.
-        # Note: If no name is specified, the database driver creates one for you!
         def references_with_foreign_keys(*args)
           options = args.extract_options!
-          fk_options = options.delete(:foreign_key)
-
-          if fk_options && !options[:polymorphic]
-            fk_options = {} if fk_options == true
-            args.each { |to_table| foreign_key(to_table, fk_options) }
+          if options[:foreign_key].present?
+            ActiveSupport::Deprecation.warn(
+              ':foreign_key option is deprecated inside create_table. ' +
+              'to add a foreign key, use add_foreign_key', caller[0,10]
+            )
           end
 
           references_without_foreign_keys(*(args << options))
         end
     
-        # Defines a foreign key for the table. +to_table+ can be a single Symbol, or
-        # an Array of Symbols. See SchemaStatements#add_foreign_key
-        #
-        # ===== Examples
-        # ====== Creating a simple foreign key
-        #  t.foreign_key(:people)
-        # ====== Defining the column
-        #  t.foreign_key(:people, :column => :sender_id)
-        # ====== Creating a named foreign key
-        #  t.foreign_key(:people, :column => :sender_id, :name => 'sender_foreign_key')
-        # ====== Defining the column of the +to_table+.
-        #  t.foreign_key(:people, :column => :sender_id, :primary_key => :person_id)
         def foreign_key(to_table, options = {})
-          if @base.supports_foreign_keys?
-            to_table = to_table.to_s.pluralize if ActiveRecord::Base.pluralize_table_names
-            foreign_keys << ForeignKey.new(@base, to_table, options)
-          end
+          ActiveSupport::Deprecation.warn(
+            'adding a foreign key inside create_table is deprecated. ' +
+            'to add a foreign key, use add_foreign_key', caller[0,10]
+          )
         end
-      
-        def to_sql_with_foreign_keys
-          sql = to_sql_without_foreign_keys
-          sql << ', ' << (foreign_keys * ', ') if foreign_keys.present?
-          sql
-        end
-      
-        private
-          def foreign_keys
-            @foreign_keys ||= []
-          end
       end
     end
 
