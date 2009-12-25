@@ -2,11 +2,11 @@
  
 Gem::Specification.new do |s|
   s.name = %q{matthuhiggins-foreigner}
-  s.version = "0.3.1"
+  s.version = "0.4.0"
  
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matthew Higgins"]
-  s.date = %q{2009-09-07}
+  s.date = %q{2009-12-25}
   s.email = %q{developer@matthewhiggins.com}
   s.extra_rdoc_files = ["README"]
   s.files = %w(
@@ -28,7 +28,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/matthuhiggins/foreigner/tree/master"
   s.rdoc_options = ["--line-numbers", "--main", "README"]
   s.require_paths = %w(lib)
-  s.rubygems_version = "1.3.4"
+  s.rubygems_version = "1.3.5"
   s.summary = "Foreign keys for Rails migrations"
   s.description = "Foreign keys for Rails migrations"
  
