@@ -1,13 +1,19 @@
 # -*- encoding: utf-8 -*-
  
 Gem::Specification.new do |s|
-  s.name = %q{matthuhiggins-foreigner}
-  s.version = "0.5.0"
- 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Matthew Higgins"]
-  s.date = %q{2010-04-01}
-  s.email = %q{developer@matthewhiggins.com}
+  s.name = 'matthuhiggins-foreigner'
+  s.version = '0.5.0'
+  s.summary = 'Foreign keys for Rails'
+  s.description = 'Adds helpers to migrations and correctly dumps foreign keys to schema.rb'
+  
+  s.required_ruby_version     = '>= 1.8.6'
+  s.required_rubygems_version = '>= 1.3.6'
+
+  s.author            = 'Matthew Higgins'
+  s.email             = 'developer@matthewhiggins.com'
+  s.homepage          = 'http://github.com/matthuhiggins/foreigner'
+  s.rubyforge_project = 'matthuhiggins-foreigner'
+  
   s.extra_rdoc_files = ["README"]
   s.files = %w(
     MIT-LICENSE
@@ -25,15 +31,5 @@ Gem::Specification.new do |s|
     test/helper.rb
     test/mysql_adapter_test.rb
   )
-  s.homepage = "http://github.com/matthuhiggins/foreigner"
-  s.rdoc_options = ["--line-numbers", "--main", "README"]
-  s.require_paths = %w(lib)
-  s.rubygems_version = "1.3.6"
-  s.summary = "Foreign keys for Rails migrations"
-  s.description = "Foreign keys for Rails migrations"
- 
-  if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 1
-  end
+  s.require_paths = %w(lib)  
 end
