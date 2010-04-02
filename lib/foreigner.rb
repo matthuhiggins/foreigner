@@ -12,21 +12,35 @@ module Foreigner
       adapters[adapter_name] = file_name
     end
   
-    def load_adapter!(adapter_name)
-      if adapters.key?(adapter_name)
-        require adapters[adapter_name]
+    def load_adapter!
+      if adapters.key?(configured_adapter)
+        require adapters[configured_adapter]
+      end
+    end
+    
+    def configured_adapter
+      ActiveRecord::Base.connection_pool.spec.config[:adapter].downcase
+    end
+    
+    def on_load(&block)
+      if Rails.version >= '3.0'
+        ActiveSupport.on_load(:active_record, &block)
+      else
+        yield
       end
     end
   end
 end
 
-module ActiveRecord
-  module ConnectionAdapters
-    include Foreigner::ConnectionAdapters::SchemaStatements
-    include Foreigner::ConnectionAdapters::SchemaDefinitions
-  end
-  
-  SchemaDumper.class_eval do
-    include Foreigner::SchemaDumper
+Foreigner.on_load do
+  module ActiveRecord
+    module ConnectionAdapters
+      include Foreigner::ConnectionAdapters::SchemaStatements
+      include Foreigner::ConnectionAdapters::SchemaDefinitions
+    end
+
+    SchemaDumper.class_eval do
+      include Foreigner::SchemaDumper
+    end
   end
 end
