@@ -14,9 +14,13 @@ Install as a plugin:
 
   ruby script/plugin install git://github.com/matthuhiggins/foreigner.git
 
-Install as a gem by adding the following to environment.rb:
+In Rails 2, install as a gem by adding the following to config/environment.rb:
 
-  config.gem "matthuhiggins-foreigner", :lib => "foreigner", :source => "http://gemcutter.org"
+  config.gem "matthuhiggins-foreigner", :lib => "foreigner"
+
+In Rails 3, install as a gem by adding the following to your Gemfile:
+
+  gem 'matthuhiggins-foreigner', :require => 'foreigner'
 
 API
 ---
@@ -94,6 +98,6 @@ schema.rb
 ---------
 
 Similar to indexes, the foreign keys in your database are automatically dumped to schema.rb.
-This allows you to use foreign keys without fighting Rails!
+This allows you to use foreign keys without switching to the :sql schema.
 
 Copyright (c) 2009 Matthew Higgins, released under the MIT license
