@@ -39,9 +39,7 @@ module Foreigner
 end
 
 Foreigner.register 'mysql', 'foreigner/connection_adapters/mysql_adapter'
-Foreigner.register 'jdbcmysql', 'foreigner/connection_adapters/mysql_adapter'
 Foreigner.register 'postgresql', 'foreigner/connection_adapters/postgresql_adapter'
-Foreigner.register 'jdbcpostgresql', 'foreigner/connection_adapters/postgresql_adapter'
 
 Foreigner.on_load do
   module ActiveRecord

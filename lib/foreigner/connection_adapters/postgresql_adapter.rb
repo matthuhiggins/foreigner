@@ -49,8 +49,16 @@ end
 
 module ActiveRecord
   module ConnectionAdapters
-    PostgreSQLAdapter.class_eval do
-      include Foreigner::ConnectionAdapters::PostgreSQLAdapter
+    if defined? PostgreSQLAdapter
+      PostgreSQLAdapter.class_eval do
+        include Foreigner::ConnectionAdapters::PostgreSQLAdapter
+      end
+    end
+
+    if defined? JdbcAdapter
+      JdbcAdapter.class_eval do
+        include Foreigner::ConnectionAdapters::PostgreSQLAdapter
+      end
     end
   end
 end

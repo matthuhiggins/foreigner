@@ -46,8 +46,16 @@ end
 
 module ActiveRecord
   module ConnectionAdapters
-    MysqlAdapter.class_eval do
-      include Foreigner::ConnectionAdapters::MysqlAdapter
+    if defined? MysqlAdapter
+      MysqlAdapter.class_eval do
+        include Foreigner::ConnectionAdapters::MysqlAdapter
+      end
+    end
+
+    if defined? JdbcAdapter
+      JdbcAdapter.class_eval do
+        include Foreigner::ConnectionAdapters::MysqlAdapter
+      end
     end
   end
 end
