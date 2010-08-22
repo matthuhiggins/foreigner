@@ -19,7 +19,7 @@ module Foreigner
     end
     
     def configured_adapter
-      ActiveRecord::Base.connection.adapter_name.downcase
+      ActiveRecord::Base.connection_pool.spec.config[:adapter]
     end
     
     def on_load(&block)
