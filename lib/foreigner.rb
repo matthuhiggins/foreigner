@@ -39,6 +39,7 @@ module Foreigner
 end
 
 Foreigner.register 'mysql', 'foreigner/connection_adapters/mysql_adapter'
+Foreigner.register 'mysql2', 'foreigner/connection_adapters/mysql_adapter'
 Foreigner.register 'postgresql', 'foreigner/connection_adapters/postgresql_adapter'
 
 Foreigner.on_load do
@@ -53,5 +54,5 @@ Foreigner.on_load do
     end
   end
   
-  Foreigner.load_adapter!  
+  Foreigner.load_adapter!
 end
