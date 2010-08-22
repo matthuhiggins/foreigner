@@ -47,18 +47,11 @@ module Foreigner
   end
 end
 
-module ActiveRecord
-  module ConnectionAdapters
-    if defined? PostgreSQLAdapter
-      PostgreSQLAdapter.class_eval do
-        include Foreigner::ConnectionAdapters::PostgreSQLAdapter
-      end
+[:PostgreSQLAdapter, :JdbcAdapter].each do |adapter|
+  begin
+    ActiveRecord::ConnectionAdapters.const_get(adapter).class_eval do
+      include Foreigner::ConnectionAdapters::MysqlAdapter
     end
-
-    if defined? JdbcAdapter
-      JdbcAdapter.class_eval do
-        include Foreigner::ConnectionAdapters::PostgreSQLAdapter
-      end
-    end
+  rescue
   end
 end

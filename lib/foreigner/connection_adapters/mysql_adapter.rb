@@ -44,18 +44,11 @@ module Foreigner
   end
 end
 
-module ActiveRecord
-  module ConnectionAdapters
-    if defined? MysqlAdapter
-      MysqlAdapter.class_eval do
-        include Foreigner::ConnectionAdapters::MysqlAdapter
-      end
+[:MysqlAdapter, :Mysql2Adapter, :JdbcAdapter].each do |adapter|
+  begin
+    ActiveRecord::ConnectionAdapters.const_get(adapter).class_eval do
+      include Foreigner::ConnectionAdapters::MysqlAdapter
     end
-
-    if defined? JdbcAdapter
-      JdbcAdapter.class_eval do
-        include Foreigner::ConnectionAdapters::MysqlAdapter
-      end
-    end
+  rescue
   end
 end
