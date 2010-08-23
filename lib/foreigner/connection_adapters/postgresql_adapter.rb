@@ -50,7 +50,7 @@ end
 [:PostgreSQLAdapter, :JdbcAdapter].each do |adapter|
   begin
     ActiveRecord::ConnectionAdapters.const_get(adapter).class_eval do
-      include Foreigner::ConnectionAdapters::MysqlAdapter
+      include Foreigner::ConnectionAdapters::PostgreSQLAdapter
     end
   rescue
   end
