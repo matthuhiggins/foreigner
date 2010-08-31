@@ -14,11 +14,11 @@ Gem::Specification.new do |s|
   s.homepage          = 'http://github.com/matthuhiggins/foreigner'
   s.rubyforge_project = 'matthuhiggins-foreigner'
   
-  s.extra_rdoc_files = ["README"]
+  s.extra_rdoc_files = ["README.rdoc"]
   s.files = %w(
     MIT-LICENSE
     Rakefile
-    README
+    README.rdoc
     lib/foreigner.rb
     lib/foreigner
     lib/foreigner/schema_dumper.rb

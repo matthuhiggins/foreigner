@@ -1,5 +1,4 @@
-Foreigner
-=========
+= Foreigner
 
 Rails does not come with methods to add foreign keys. Foreigner introduces a few
 methods to your migrations for adding and removing foreign key constraints.
@@ -7,8 +6,7 @@ methods to your migrations for adding and removing foreign key constraints.
 Since each adapter implements the API, migrations using Foreigner will continue to
 work on databases that do not support foreign keys, such as sqlite3.
 
-Installation
-------------
+== Installation
 
 Install as a plugin:
 
@@ -22,8 +20,7 @@ In Rails 3, install as a gem by adding the following to your Gemfile:
 
   gem 'matthuhiggins-foreigner', :require => 'foreigner'
 
-API
----
+== API
 
 An adapter implementing the Foreigner API implements three methods.
 (Options are documented in connection_adapters/abstract/schema_definitions.rb):
@@ -32,8 +29,7 @@ An adapter implementing the Foreigner API implements three methods.
   remove_foreign_key(from_table, options)
   foreign_keys(table_name)
 
-Example
--------
+== Example
 
 The most common use of foreign keys is to reference a table that a model belongs to.
 For example, given the following model:
@@ -62,40 +58,37 @@ Lastly, a name can be specified for the foreign key constraint:
 
   add_foreign_key(:comments, :posts, :name => 'comment_article_foreign_key')
 
-Create/Change Table Shorthand
------------------------------
+== Create/Change Table Shorthand
 
 Foreigner adds extra behavior to change_table, which lets you define foreign keys using shorthand.
 
 Add a missing foreign key to comments:
 
-change_table :comments do |t|
-  t.foreign_key :posts, :dependent => :delete
-end
+  change_table :comments do |t|
+    t.foreign_key :posts, :dependent => :delete
+  end
 
 t.foreign_key accepts the same options as add_foreign_key.
 
 
-Additional t.references option
-------------------------------
+== Additional t.references option
 
 Foreigner extends table.references with the :foreign_key option. Pass true, and the default
 foreign key options are used:
 
-change_table :comments do |t|
-  t.references :post, :foreign_key => true
-end
+  change_table :comments do |t|
+    t.references :post, :foreign_key => true
+  end
 
 An options hash can also be passed. It accepts the same options as add_foreign_key:
 
-change_table :comments do |t|
-  t.references :author, :foreign_key => {:dependent => :destroy}
-end
+  change_table :comments do |t|
+    t.references :author, :foreign_key => {:dependent => :destroy}
+  end
 
 By default, t.references will not generate a foreign key.
 
-schema.rb
----------
+== schema.rb
 
 Similar to indexes, the foreign keys in your database are automatically dumped to schema.rb.
 This allows you to use foreign keys without switching to the :sql schema.
