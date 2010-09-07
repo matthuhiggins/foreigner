@@ -2,7 +2,7 @@
  
 Gem::Specification.new do |s|
   s.name = 'matthuhiggins-foreigner'
-  s.version = '0.7.0'
+  s.version = '0.7.1'
   s.summary = 'Foreign keys for Rails'
   s.description = 'Adds helpers to migrations and correctly dumps foreign keys to schema.rb'
   
@@ -14,22 +14,7 @@ Gem::Specification.new do |s|
   s.homepage          = 'http://github.com/matthuhiggins/foreigner'
   s.rubyforge_project = 'matthuhiggins-foreigner'
   
-  s.extra_rdoc_files = ["README.rdoc"]
-  s.files = %w(
-    MIT-LICENSE
-    Rakefile
-    README.rdoc
-    lib/foreigner.rb
-    lib/foreigner
-    lib/foreigner/schema_dumper.rb
-    lib/foreigner/connection_adapters
-    lib/foreigner/connection_adapters/sql_2003.rb
-    lib/foreigner/connection_adapters/mysql_adapter.rb
-    lib/foreigner/connection_adapters/postgresql_adapter.rb
-    lib/foreigner/connection_adapters/abstract/schema_definitions.rb
-    lib/foreigner/connection_adapters/abstract/schema_statements.rb
-    test/helper.rb
-    test/mysql_adapter_test.rb
-  )
+  s.extra_rdoc_files = ['README.rdoc']
+  s.files = %w(MIT-LICENSE Rakefile README.rdoc) + Dir['lib/**/*.rb'] + Dir['test/**/*.rb']
   s.require_paths = %w(lib)  
 end
