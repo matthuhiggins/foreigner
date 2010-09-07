@@ -13,6 +13,15 @@ module Foreigner
     end
   
     def load_adapter!
+      ActiveRecord::ConnectionAdapters.module_eval do
+        include Foreigner::ConnectionAdapters::SchemaStatements
+        include Foreigner::ConnectionAdapters::SchemaDefinitions
+      end
+
+      ActiveRecord::SchemaDumper.class_eval do
+        include Foreigner::SchemaDumper
+      end
+
       if adapters.key?(configured_adapter)
         require adapters[configured_adapter]
       end
@@ -21,20 +30,6 @@ module Foreigner
     def configured_adapter
       ActiveRecord::Base.connection_pool.spec.config[:adapter]
     end
-    
-    def on_load(&block)
-      if defined?(Rails) && Rails.version >= '3.0'
-        ActiveSupport.on_load :active_record do
-          unless ActiveRecord::Base.connected?
-            ActiveRecord::Base.configurations = Rails.application.config.database_configuration
-            ActiveRecord::Base.establish_connection
-          end
-          block.call
-        end
-      else
-        yield
-      end
-    end
   end
 end
 
@@ -42,17 +37,14 @@ Foreigner.register 'mysql', 'foreigner/connection_adapters/mysql_adapter'
 Foreigner.register 'mysql2', 'foreigner/connection_adapters/mysql_adapter'
 Foreigner.register 'postgresql', 'foreigner/connection_adapters/postgresql_adapter'
 
-Foreigner.on_load do
-  module ActiveRecord
-    module ConnectionAdapters
-      include Foreigner::ConnectionAdapters::SchemaStatements
-      include Foreigner::ConnectionAdapters::SchemaDefinitions
-    end
-
-    SchemaDumper.class_eval do
-      include Foreigner::SchemaDumper
+if defined?(Rails::Railtie)
+  class Railtie < Rails::Railtie
+    initializer 'foreigner.load_adapter' do
+      ActiveSupport.on_load :active_record do
+        Foreigner.load_adapter!
+      end
     end
   end
-  
+else
   Foreigner.load_adapter!
 end
