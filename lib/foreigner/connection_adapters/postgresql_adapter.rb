@@ -39,6 +39,8 @@ module Foreigner
             options[:dependent] = :delete
           elsif row['dependency'] == 'SET NULL'
             options[:dependent] = :nullify
+          elsif row['dependency'] == 'RESTRICT'
+            options[:dependent] = :restrict
           end
           ForeignKeyDefinition.new(table_name, row['to_table'], options)
         end

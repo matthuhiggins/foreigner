@@ -47,6 +47,14 @@ class MysqlAdapterTest < ActiveRecord::TestCase
     )
   end
   
+  def test_add_with_restrict_dependency
+    assert_equal(
+      "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
+      "ON DELETE RESTRICT",
+      add_foreign_key(:employees, :companies, :dependent => :restrict)
+    )
+  end
+  
   def test_remove_by_table
     assert_equal(
       "ALTER TABLE `suppliers` DROP FOREIGN KEY `suppliers_company_id_fk`",

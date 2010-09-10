@@ -83,7 +83,7 @@ foreign key options are used:
 An options hash can also be passed. It accepts the same options as add_foreign_key:
 
   change_table :comments do |t|
-    t.references :author, :foreign_key => {:dependent => :destroy}
+    t.references :author, :foreign_key => {:dependent => :restrict}
   end
 
 By default, t.references will not generate a foreign key.

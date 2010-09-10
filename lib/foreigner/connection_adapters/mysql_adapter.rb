@@ -30,11 +30,13 @@ module Foreigner
         fk_info.map do |row|
           options = {:column => row['column'], :name => row['name'], :primary_key => row['primary_key']}
 
-          if create_table_info =~ /CONSTRAINT #{quote_column_name(row['name'])} FOREIGN KEY .* REFERENCES .* ON DELETE (CASCADE|SET NULL)/
+          if create_table_info =~ /CONSTRAINT #{quote_column_name(row['name'])} FOREIGN KEY .* REFERENCES .* ON DELETE (CASCADE|SET NULL|RESTRICT)/
             if $1 == 'CASCADE'
               options[:dependent] = :delete
             elsif $1 == 'SET NULL'
               options[:dependent] = :nullify
+            elsif $1 == 'RESTRICT'
+              options[:dependent] = :restrict
             end
           end
           ForeignKeyDefinition.new(table_name, row['to_table'], options)

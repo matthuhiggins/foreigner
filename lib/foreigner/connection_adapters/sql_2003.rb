@@ -34,6 +34,7 @@ module Foreigner
           case dependency
             when :nullify then "ON DELETE SET NULL"
             when :delete  then "ON DELETE CASCADE"
+            when :restrict then "ON DELETE RESTRICT"
             else ""
           end
         end
