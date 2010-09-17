@@ -15,36 +15,6 @@ module Foreigner
       end
     end
   
-    module TableDefinition
-      def self.included(base)
-        base.class_eval do
-          include InstanceMethods
-          alias_method_chain :references, :foreign_keys
-        end
-      end
-    
-      module InstanceMethods
-        def references_with_foreign_keys(*args)
-          options = args.extract_options!
-          if options[:foreign_key].present?
-            ActiveSupport::Deprecation.warn(
-              ':foreign_key option is deprecated inside create_table. ' +
-              'to add a foreign key, use add_foreign_key', caller[0,10]
-            )
-          end
-
-          references_without_foreign_keys(*(args << options))
-        end
-    
-        def foreign_key(to_table, options = {})
-          ActiveSupport::Deprecation.warn(
-            'adding a foreign key inside create_table is deprecated. ' +
-            'to add a foreign key, use add_foreign_key', caller[0,10]
-          )
-        end
-      end
-    end
-
     module Table
       def self.included(base)
         base.class_eval do
