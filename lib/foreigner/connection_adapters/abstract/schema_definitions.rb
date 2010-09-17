@@ -5,10 +5,6 @@ module Foreigner
     
     module SchemaDefinitions
       def self.included(base)
-        base::TableDefinition.class_eval do
-          include Foreigner::ConnectionAdapters::TableDefinition
-        end
-        
         base::Table.class_eval do
           include Foreigner::ConnectionAdapters::Table
         end
@@ -53,7 +49,7 @@ module Foreigner
           @base.remove_foreign_key(@table_name, options)
         end
       
-        # Adds a :foreign_key option to TableDefinition.references.
+        # Adds a :foreign_key option to Table.references.
         # If :foreign_key is true, a foreign key constraint is added to the table.
         # You can also specify a hash, which is passed as foreign key options.
         # 
