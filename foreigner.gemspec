@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
  
 Gem::Specification.new do |s|
-  s.name = 'matthuhiggins-foreigner'
-  s.version = '0.8.1'
+  s.name = 'foreigner'
+  s.version = '0.9.0'
   s.summary = 'Foreign keys for Rails'
   s.description = 'Adds helpers to migrations and correctly dumps foreign keys to schema.rb'
   
@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.author            = 'Matthew Higgins'
   s.email             = 'developer@matthewhiggins.com'
   s.homepage          = 'http://github.com/matthuhiggins/foreigner'
-  s.rubyforge_project = 'matthuhiggins-foreigner'
+  s.rubyforge_project = 'foreigner'
   
   s.extra_rdoc_files = ['README.rdoc']
   s.files = %w(MIT-LICENSE Rakefile README.rdoc) + Dir['lib/**/*.rb'] + Dir['test/**/*.rb']

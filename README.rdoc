@@ -14,11 +14,11 @@ Install as a plugin:
 
 In Rails 2, install as a gem by adding the following to config/environment.rb:
 
-  config.gem "matthuhiggins-foreigner", :lib => "foreigner"
+  config.gem 'foreigner'
 
 In Rails 3, install as a gem by adding the following to your Gemfile:
 
-  gem 'matthuhiggins-foreigner', :require => 'foreigner'
+  gem 'foreigner'
 
 == API
 
