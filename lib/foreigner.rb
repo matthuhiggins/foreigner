@@ -4,14 +4,15 @@ require 'foreigner/connection_adapters/sql_2003'
 require 'foreigner/schema_dumper'
 
 module Foreigner
-  mattr_accessor :adapters
-  self.adapters = {}
-
   class << self
+    def adapters
+      @@adapters ||= {}
+    end
+
     def register(adapter_name, file_name)
       adapters[adapter_name] = file_name
     end
-  
+
     def load_adapter!
       ActiveRecord::ConnectionAdapters.module_eval do
         include Foreigner::ConnectionAdapters::SchemaStatements
@@ -26,7 +27,7 @@ module Foreigner
         require adapters[configured_adapter]
       end
     end
-    
+
     def configured_adapter
       ActiveRecord::Base.connection_pool.spec.config[:adapter]
     end
