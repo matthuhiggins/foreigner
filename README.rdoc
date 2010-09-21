@@ -8,10 +8,6 @@ work on databases that do not support foreign keys, such as sqlite3.
 
 == Installation
 
-Install as a plugin:
-
-  ruby script/plugin install git://github.com/matthuhiggins/foreigner.git
-
 In Rails 2, install as a gem by adding the following to config/environment.rb:
 
   config.gem 'foreigner'
