@@ -2,7 +2,16 @@ module Foreigner
   module ConnectionAdapters
     module PostgreSQLAdapter
       include Foreigner::ConnectionAdapters::Sql2003
-
+      
+      def add_foreign_key(from_table, to_table, options = {})
+        sql = add_foreign_key_sql(from_table, to_table)
+        
+        deferrable = deferrable_sql(options[:deferrable], options[:initially])
+        sql << " #{deferrable}" if deferrable.present?
+        
+        execute(sql)
+      end
+      
       def remove_foreign_key(table, options)
         if Hash === options
           foreign_key_name = foreign_key_name(table, options[:column], options)
@@ -44,6 +53,25 @@ module Foreigner
           ForeignKeyDefinition.new(table_name, row['to_table'], options)
         end
       end
+      
+      
+      private
+      
+        def deferrable_sql(deferrable, initially)
+          statement = case deferrable
+            when true then "DEFERRABLE"
+            when false then "NOT DEFERRABLE"
+            else ""
+          end
+          
+          statement << case initially
+            when :immediate then " INITIALLY IMMEDIATE"
+            when :deferred then " INITIALLY DEFERRED"
+            else ""
+          end
+          
+          statement
+        end
     end
   end
 end

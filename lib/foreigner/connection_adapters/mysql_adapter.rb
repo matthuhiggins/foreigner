@@ -3,6 +3,11 @@ module Foreigner
     module MysqlAdapter
       include Foreigner::ConnectionAdapters::Sql2003
       
+      def add_foreign_key(from_table, to_table, options = {})
+        sql = add_foreign_key_sql(from_table, to_table, options)
+        execute(sql)
+      end
+      
       def remove_foreign_key(table, options)
         if Hash === options
           foreign_key_name = foreign_key_name(table, options[:column], options)
