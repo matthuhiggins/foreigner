@@ -51,6 +51,29 @@ module Foreigner
       # [:dependent]
       #   If set to <tt>:delete</tt>, the associated records in from_table are deleted when records in to_table table are deleted.
       #   If set to <tt>:nullify</tt>, the foreign key column is set to +NULL+.
+      # 
+      # === Additional options for Postgres
+      #   Postgres supports postoning of constraint checks, which comes in very handy when doing bulk inserts/updates/deletes.
+      #   Like this, one can change data across multiple tables without worrying about the order when to insert what, as
+      #   the constraints can be checked at the end of the whole transation and not after every command.
+      #   To do this, one needs to execute SET CONTSTRAINTS ALL DEFERRED within a transation. Read more on SET CONSTRAINS
+      #   in the Postres docs.
+      #   
+      #   Now, to actually make this work, every constraint that needs to be deferrable must be enabled to do so
+      #   upon creation of the constraint. You may use the following options.
+      # 
+      # [:deferrable]
+      #   The DEFERRABLE option in Postgres controls whether checking a constraint can be postponed until the end of the transaction. 
+      #   NOT DEFERRABLE is the default. UNIQUE, PRIMARY KEY, EXCLUDE, and REFERENCES (foreign key) constraints accept this clause. 
+      #   NOT NULL and CHECK constraints are not deferrable. Read the Postres CREATE TABLE doc for more information.
+      #   
+      #   If set to <tt>true</tt>, the constraint will be checked at the end of the transation.
+      #   If set to <tt>false</tt>, the constraint will be checked immediately after every command.
+      # [:initialy]
+      #   If a constraint is :deferrable, this clause specified the *default* time to check the constraint.
+      #   
+      #   If set to <tt>:immediate</tt>, the constraint is checked after each statement.
+      #   If set to <tt>:deferred</tt>, the constraint is checked only at the end of the transation.
       def add_foreign_key(from_table, to_table, options = {})
       end
 
