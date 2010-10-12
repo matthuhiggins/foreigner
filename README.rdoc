@@ -54,7 +54,7 @@ Lastly, a name can be specified for the foreign key constraint:
 
   add_foreign_key(:comments, :posts, :name => 'comment_article_foreign_key')
 
-== Create/Change Table Shorthand
+== Change Table Shorthand
 
 Foreigner adds extra behavior to change_table, which lets you define foreign keys using shorthand.
 
