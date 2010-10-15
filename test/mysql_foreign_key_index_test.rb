@@ -43,7 +43,7 @@ class MySqlForeignKeyIndexTest < Test::Unit::TestCase
 
   def test_keep_foreign_key_option_removes_the_key_but_keeps_its_index
     @connection.add_foreign_key :children, :parents
-    @connection.remove_foreign_key :children, :column => :parent_id, :keep_index => true
+    @connection.remove_foreign_key :children, :parents, :keep_index => true
     assert @connection.has_index?(:children, @fk_index)
   end
   
@@ -54,7 +54,9 @@ class MySqlForeignKeyIndexTest < Test::Unit::TestCase
         t.references :parent
       end
 
-      create_table 'parents', :force => true
+      create_table 'parents', :force => true do |t|
+	# nothing... avoid more API diffs
+      end
     end
   end
 end
