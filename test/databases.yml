@@ -1,0 +1,6 @@
+mysql:
+  database: foreigner_test
+  adapter: mysql
+  username: 
+  password: 
+
