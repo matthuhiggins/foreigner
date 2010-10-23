@@ -50,7 +50,7 @@ If the column is named article_id instead of post_id, use the :column option:
 
   add_foreign_key(:comments, :posts, :column => 'article_id')
   
-Lastly, a name can be specified for the foreign key constraint:
+A name can be specified for the foreign key constraint:
 
   add_foreign_key(:comments, :posts, :name => 'comment_article_foreign_key')
 
