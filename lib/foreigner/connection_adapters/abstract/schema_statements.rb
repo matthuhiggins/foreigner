@@ -51,6 +51,8 @@ module Foreigner
       # [:dependent]
       #   If set to <tt>:delete</tt>, the associated records in from_table are deleted when records in to_table table are deleted.
       #   If set to <tt>:nullify</tt>, the foreign key column is set to +NULL+.
+      # [:options]
+      #   Any extra options you want appended to the foreign key definition.
       def add_foreign_key(from_table, to_table, options = {})
       end
 

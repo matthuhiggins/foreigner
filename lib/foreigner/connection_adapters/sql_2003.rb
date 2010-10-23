@@ -17,6 +17,7 @@ module Foreigner
           "FOREIGN KEY (#{quote_column_name(column)}) " +
           "REFERENCES #{quote_table_name(ActiveRecord::Migrator.proper_table_name(to_table))}(#{primary_key})"
         sql << " #{dependency}" if dependency.present?
+        sql << " #{options[:options]}" if options[:options]
       
         execute(sql)
       end
