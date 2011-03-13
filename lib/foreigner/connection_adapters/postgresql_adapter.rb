@@ -30,6 +30,7 @@ module Foreigner
           WHERE tc.constraint_type = 'FOREIGN KEY'
             AND tc.constraint_catalog = '#{@config[:database]}'
             AND tc.table_name = '#{table_name}'
+            AND tc.table_schema = ANY (current_schemas(false))
         }
         
         fk_info.map do |row|
