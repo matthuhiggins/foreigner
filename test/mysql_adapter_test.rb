@@ -1,7 +1,7 @@
 require 'helper'
 require 'foreigner/connection_adapters/mysql_adapter'
 
-class MysqlAdapterTest < ActiveRecord::TestCase
+class MysqlAdapterTest < ActiveSupport::TestCase
   include Foreigner::ConnectionAdapters::MysqlAdapter
 
   test 'add_without_options' do
