@@ -1,6 +1,6 @@
 module Foreigner
   module ConnectionAdapters
-    module MysqlAdapter
+    module Mysql2Adapter
       include Foreigner::ConnectionAdapters::Sql2003
       
       def remove_foreign_key(table, options)
@@ -44,10 +44,10 @@ module Foreigner
   end
 end
 
-[:MysqlAdapter, :Mysql2Adapter, :JdbcAdapter].each do |adapter|
+[:Mysql2Adapter, :JdbcAdapter].each do |adapter|
   begin
     ActiveRecord::ConnectionAdapters.const_get(adapter).class_eval do
-      include Foreigner::ConnectionAdapters::MysqlAdapter
+      include Foreigner::ConnectionAdapters::Mysql2Adapter
     end
   rescue
   end
