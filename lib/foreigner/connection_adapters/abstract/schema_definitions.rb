@@ -12,10 +12,10 @@ module Foreigner
     end
   
     module Table
-      def self.included(base)
-        base.class_eval do
-          alias_method_chain :references, :foreign_keys
-        end
+      extend ActiveSupport::Concern
+
+      included do
+        alias_method_chain :references, :foreign_keys
       end
 
       # Adds a new foreign key to the table. +to_table+ can be a single Symbol, or
