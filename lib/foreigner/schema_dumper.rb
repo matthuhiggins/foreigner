@@ -1,9 +1,9 @@
 module Foreigner
   module SchemaDumper
-    def self.included(base)
-      base.class_eval do
-        alias_method_chain :tables, :foreign_keys
-      end
+    extend ActiveSupport::Concern
+
+    included do
+      alias_method_chain :tables, :foreign_keys
     end
     
     def tables_with_foreign_keys(stream)
