@@ -2,6 +2,7 @@ require 'foreigner/connection_adapters/abstract/schema_statements'
 require 'foreigner/connection_adapters/abstract/schema_definitions'
 require 'foreigner/connection_adapters/sql_2003'
 require 'foreigner/schema_dumper'
+require 'foreigner/railtie'
 
 module Foreigner
   class << self
@@ -37,13 +38,3 @@ end
 Foreigner.register 'mysql', 'foreigner/connection_adapters/mysql_adapter'
 Foreigner.register 'mysql2', 'foreigner/connection_adapters/mysql_adapter'
 Foreigner.register 'postgresql', 'foreigner/connection_adapters/postgresql_adapter'
-
-module Foreigner
-  class Railtie < Rails::Railtie
-    initializer 'foreigner.load_adapter' do
-      ActiveSupport.on_load :active_record do
-        Foreigner.load_adapter!
-      end
-    end
-  end
-end
