@@ -14,8 +14,7 @@ Gem::Specification.new do |s|
   s.homepage          = 'http://github.com/matthuhiggins/foreigner'
   s.rubyforge_project = 'foreigner'
 
-  s.extra_rdoc_files = ['README.rdoc']
+  s.extra_rdoc_files = %w(README.rdoc)
   s.files = %w(MIT-LICENSE Rakefile README.rdoc) + Dir['lib/**/*.rb'] + Dir['test/**/*.rb']
-  s.require_paths = %w(lib)
   s.add_dependency('activerecord', '>= 3.0.0')
 end
