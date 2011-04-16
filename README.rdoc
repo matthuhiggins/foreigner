@@ -3,9 +3,9 @@
 Foreigner introduces a few methods to your migrations for adding and removing foreign key constraints. It also dumps foreign keys to schema.rb.
 
 The following adapters are supported:
-  * mysql2
-  * postgres
-  * sqlite (no-op)
+ * mysql2
+ * postgres
+ * sqlite (foreign key methods are a no-op)
 
 == Installation
 
