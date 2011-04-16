@@ -3,16 +3,6 @@ module Foreigner
     module PostgreSQLAdapter
       include Foreigner::ConnectionAdapters::Sql2003
 
-      def remove_foreign_key(table, options)
-        if Hash === options
-          foreign_key_name = foreign_key_name(table, options[:column], options)
-        else
-          foreign_key_name = foreign_key_name(table, "#{options.to_s.singularize}_id")
-        end
-
-        "DROP CONSTRAINT #{quote_column_name(foreign_key_name)}"
-      end
-      
       def foreign_keys(table_name)
         fk_info = select_all %{
           SELECT tc.constraint_name as name

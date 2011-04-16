@@ -30,6 +30,16 @@ module Foreigner
         execute "ALTER TABLE #{quote_table_name(table)} #{remove_foreign_key_sql(table, options)}"
       end
 
+      def remove_foreign_key_sql(table, options)
+        if Hash === options
+          foreign_key_name = foreign_key_name(table, options[:column], options)
+        else
+          foreign_key_name = foreign_key_name(table, "#{options.to_s.singularize}_id")
+        end
+
+        "DROP CONSTRAINT #{quote_column_name(foreign_key_name)}"
+      end
+
       private
         def foreign_key_name(table, column, options = {})
           if options[:name]
