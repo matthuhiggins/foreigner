@@ -10,7 +10,7 @@ module Foreigner
           foreign_key_name = foreign_key_name(table, "#{options.to_s.singularize}_id")
         end
 
-        execute "ALTER TABLE #{quote_table_name(table)} DROP CONSTRAINT #{quote_column_name(foreign_key_name)}"
+        "DROP CONSTRAINT #{quote_column_name(foreign_key_name)}"
       end
       
       def foreign_keys(table_name)

@@ -12,6 +12,10 @@ module Foreigner
       autoload :SchemaStatements
     end
   end
+
+  module Migration
+    autoload :CommandRecorder, 'foreigner/migration/command_recorder'
+  end
 end
 
 Foreigner::Adapter.register 'mysql2', 'foreigner/connection_adapters/mysql2_adapter'

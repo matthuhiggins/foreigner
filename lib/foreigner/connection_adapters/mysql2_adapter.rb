@@ -3,14 +3,14 @@ module Foreigner
     module Mysql2Adapter
       include Foreigner::ConnectionAdapters::Sql2003
       
-      def remove_foreign_key(table, options)
+      def remove_foreign_key_sql(table, options)
         if Hash === options
           foreign_key_name = foreign_key_name(table, options[:column], options)
         else
           foreign_key_name = foreign_key_name(table, "#{options.to_s.singularize}_id")
         end
 
-        execute "ALTER TABLE #{quote_table_name(table)} DROP FOREIGN KEY #{quote_column_name(foreign_key_name)}"
+        "DROP FOREIGN KEY #{quote_column_name(foreign_key_name)}"
       end
       
       def foreign_keys(table_name)

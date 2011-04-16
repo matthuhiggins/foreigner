@@ -4,22 +4,30 @@ module Foreigner
       def supports_foreign_keys?
         true
       end
-    
+
       def add_foreign_key(from_table, to_table, options = {})
+        sql = "ALTER TABLE #{quote_table_name(from_table)} #{add_foreign_key_sql(from_table, to_table, options)}"
+        execute(sql)
+      end
+
+      def add_foreign_key_sql(from_table, to_table, options = {})
         column  = options[:column] || "#{to_table.to_s.singularize}_id"
         foreign_key_name = foreign_key_name(from_table, column, options)
         primary_key = options[:primary_key] || "id"
         dependency = dependency_sql(options[:dependent])
 
         sql =
-          "ALTER TABLE #{quote_table_name(from_table)} " +
           "ADD CONSTRAINT #{quote_column_name(foreign_key_name)} " +
           "FOREIGN KEY (#{quote_column_name(column)}) " +
           "REFERENCES #{quote_table_name(ActiveRecord::Migrator.proper_table_name(to_table))}(#{primary_key})"
         sql << " #{dependency}" if dependency.present?
         sql << " #{options[:options]}" if options[:options]
-      
-        execute(sql)
+
+        sql
+      end
+
+      def remove_foreign_key(table, options)
+        execute "ALTER TABLE #{quote_table_name(table)} #{remove_foreign_key_sql(table, options)}"
       end
 
       private
