@@ -14,18 +14,15 @@ Add the following to your Gemfile:
 
   gem 'foreigner'
 
-== API
+== API Examples
 
-An adapter implementing the Foreigner API implements three methods.
+Foreigner adds two methods to migrations.
+
+* add_foreign_key(from_table, to_table, options)
+* remove_foreign_key(from_table, options)
+
 (Options are documented in connection_adapters/abstract/schema_definitions.rb):
 
-  add_foreign_key(from_table, to_table, options)
-  remove_foreign_key(from_table, options)
-  foreign_keys(table_name)
-
-== Example
-
-A common use of foreign keys is to reference a table that a model belongs to.
 For example, given the following model:
 
   class Comment < ActiveRecord::Base
@@ -52,7 +49,7 @@ A name can be specified for the foreign key constraint:
 
   add_foreign_key(:comments, :posts, :name => 'comment_article_foreign_key')
 
-== Change Table Shorthand
+== Change Table Methods
 
 Foreigner adds extra methods to change_table.
 
@@ -67,8 +64,6 @@ Remove an unwanted foreign key:
   change_table :comments do |t|
     t.remove_foreign_key :users
   end
-
-t.foreign_key accepts the same options as add_foreign_key.
 
 == Additional t.references option for change_table
 
@@ -87,5 +82,6 @@ An options hash can also be passed. It accepts the same options as add_foreign_k
 
 By default, t.references will not generate a foreign key.
 
+== License
 
 Copyright (c) 2011 Matthew Higgins, released under the MIT license
