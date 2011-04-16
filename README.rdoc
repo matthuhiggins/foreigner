@@ -8,11 +8,7 @@ work on databases that do not support foreign keys, such as sqlite3.
 
 == Installation
 
-In Rails 2, install as a gem by adding the following to config/environment.rb:
-
-  config.gem 'foreigner'
-
-In Rails 3, install as a gem by adding the following to your Gemfile:
+Adding the following to your Gemfile:
 
   gem 'foreigner'
 
@@ -67,7 +63,7 @@ Add a missing foreign key to comments:
 t.foreign_key accepts the same options as add_foreign_key.
 
 
-== Additional t.references option
+== Additional t.references option for change_table
 
 Foreigner extends table.references with the :foreign_key option. Pass true, and the default
 foreign key options are used:
@@ -86,7 +82,7 @@ By default, t.references will not generate a foreign key.
 
 == schema.rb
 
-Similar to indexes, the foreign keys in your database are automatically dumped to schema.rb.
+Foreigner automatically dumps foreign keys in your database to schema.rb.
 This allows you to use foreign keys without switching to the :sql schema.
 
-Copyright (c) 2009 Matthew Higgins, released under the MIT license
+Copyright (c) 2011 Matthew Higgins, released under the MIT license
