@@ -1,14 +1,15 @@
 = Foreigner
 
-Rails does not come with methods to add foreign keys. Foreigner introduces a few
-methods to your migrations for adding and removing foreign key constraints.
+Foreigner introduces a few methods to your migrations for adding and removing foreign key constraints. It also dumps foreign keys to schema.rb.
 
-Since each adapter implements the API, migrations using Foreigner will continue to
-work on databases that do not support foreign keys, such as sqlite3.
+The following adapters are supported:
+  * mysql2
+  * postgres
+  * sqlite (no-op)
 
 == Installation
 
-Adding the following to your Gemfile:
+Add the following to your Gemfile:
 
   gem 'foreigner'
 
@@ -23,7 +24,7 @@ An adapter implementing the Foreigner API implements three methods.
 
 == Example
 
-The most common use of foreign keys is to reference a table that a model belongs to.
+A common use of foreign keys is to reference a table that a model belongs to.
 For example, given the following model:
 
   class Comment < ActiveRecord::Base
@@ -52,7 +53,7 @@ A name can be specified for the foreign key constraint:
 
 == Change Table Shorthand
 
-Foreigner adds extra behavior to change_table, which lets you define foreign keys using shorthand.
+Foreigner adds extra methods to change_table.
 
 Add a missing foreign key to comments:
 
@@ -60,8 +61,13 @@ Add a missing foreign key to comments:
     t.foreign_key :posts, :dependent => :delete
   end
 
-t.foreign_key accepts the same options as add_foreign_key.
+Remove an unwanted foreign key:
+  
+  change_table :comments do |t|
+    t.remove_foreign_key :users
+  end
 
+t.foreign_key accepts the same options as add_foreign_key.
 
 == Additional t.references option for change_table
 
