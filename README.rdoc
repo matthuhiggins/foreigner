@@ -3,9 +3,10 @@
 Foreigner introduces a few methods to your migrations for adding and removing foreign key constraints. It also dumps foreign keys to schema.rb.
 
 The following adapters are supported:
- * mysql2
- * postgres
- * sqlite (foreign key methods are a no-op)
+
+* mysql2
+* postgres
+* sqlite (foreign key methods are a no-op)
 
 == Installation
 
@@ -86,9 +87,5 @@ An options hash can also be passed. It accepts the same options as add_foreign_k
 
 By default, t.references will not generate a foreign key.
 
-== schema.rb
-
-Foreigner automatically dumps foreign keys in your database to schema.rb.
-This allows you to use foreign keys without switching to the :sql schema.
 
 Copyright (c) 2011 Matthew Higgins, released under the MIT license
