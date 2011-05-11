@@ -15,6 +15,7 @@ module Foreigner
 
   module Migration
     autoload :CommandRecorder, 'foreigner/migration/command_recorder'
+    autoload :Generator, 'foreigner/migration/generator'
   end
 end
 
