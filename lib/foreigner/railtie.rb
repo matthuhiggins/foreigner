@@ -20,5 +20,8 @@ module Foreigner
         Foreigner::Adapter.load!
       end
     end
+    rake_tasks do
+      load File.dirname(__FILE__) + "/../tasks/foreigner_tasks.rake"
+    end
   end
 end
