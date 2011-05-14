@@ -15,16 +15,18 @@ module Foreigner
           add_statements = []
           remove_statements = []
           new_keys, warnings = new_model_keys
+          notices = []
           if new_keys.present?
             new_keys.each do |foreign_key|
               add_statements << add_foreign_key_statement(foreign_key)
               remove_statements << "remove_foreign_key #{foreign_key.from_table.inspect}, :name => #{foreign_key.options[:name].inspect}"
+              notices << "#{foreign_key.options[:name]} has ON DELETE CASCADE. You should remove the :dependent option from the association to take advantage of this." if foreign_key.options[:dependent] == :delete
             end
   
             migration_info = generate_migration_info
             write_migration(migration_info[:filename], migration_info[:name], add_statements, remove_statements)
           end
-          {:filename => migration_info[:filename], :warnings => warnings}
+          {:filename => migration_info[:filename], :notices => notices, :warnings => warnings}
         end
 
         def new_model_keys(db_keys = current_foreign_keys, classes = model_classes)
@@ -153,39 +155,43 @@ end
             # 2. foreign keys for :through associations will be handled by their component has_one/has_many/belongs_to associations
             # 3. :polymorphic(/:as) associations can't have foreign keys
             (reflection.options.keys & [:finder_sql, :through, :polymorphic, :as]).present?
-          }.map{ |reflection|
-            case reflection.macro
-              when :belongs_to
-                Foreigner::ConnectionAdapters::ForeignKeyDefinition.new(
-                  klass.table_name, reflection.klass.table_name,
-                  :column => reflection.primary_key_name,
-                  :primary_key => reflection.klass.primary_key,
-                  # although belongs_to can specify :dependent, it doesn't make
-                  # sense from a foreign key perspective
-                  :dependent => nil
-                )
-              when :has_one, :has_many
-                Foreigner::ConnectionAdapters::ForeignKeyDefinition.new(
-                  reflection.klass.table_name, klass.table_name,
-                  :column => reflection.primary_key_name,
-                  :primary_key => klass.primary_key,
-                  :dependent => [:delete, :delete_all].include?(reflection.options[:dependent]) && reflection.options[:conditions].nil? ? :delete : nil
-                )
-              when :has_and_belongs_to_many
-                [
+          }.map { |reflection|
+            begin
+              case reflection.macro
+                when :belongs_to
                   Foreigner::ConnectionAdapters::ForeignKeyDefinition.new(
-                    reflection.options[:join_table], klass.table_name,
-                    :column => reflection.primary_key_name,
-                    :primary_key => klass.primary_key,
-                    :dependent => nil
-                  ),
-                  Foreigner::ConnectionAdapters::ForeignKeyDefinition.new(
-                    reflection.options[:join_table], reflection.klass.table_name,
-                    :column => reflection.association_foreign_key,
-                    :primary_key => reflection.klass.primary_key,
+                    klass.table_name, reflection.klass.table_name,
+                    :column => reflection.primary_key_name.to_s,
+                    :primary_key => reflection.klass.primary_key.to_s,
+                    # although belongs_to can specify :dependent, it doesn't make
+                    # sense from a foreign key perspective
                     :dependent => nil
                   )
-                ]
+                when :has_one, :has_many
+                  Foreigner::ConnectionAdapters::ForeignKeyDefinition.new(
+                    reflection.klass.table_name, klass.table_name,
+                    :column => reflection.primary_key_name.to_s,
+                    :primary_key => klass.primary_key.to_s,
+                    :dependent => [:delete, :delete_all].include?(reflection.options[:dependent]) && reflection.options[:conditions].nil? ? :delete : nil
+                  )
+                when :has_and_belongs_to_many
+                  [
+                    Foreigner::ConnectionAdapters::ForeignKeyDefinition.new(
+                      reflection.options[:join_table], klass.table_name,
+                      :column => reflection.primary_key_name.to_s,
+                      :primary_key => klass.primary_key.to_s,
+                      :dependent => nil
+                    ),
+                    Foreigner::ConnectionAdapters::ForeignKeyDefinition.new(
+                      reflection.options[:join_table], reflection.klass.table_name,
+                      :column => reflection.association_foreign_key.to_s,
+                      :primary_key => reflection.klass.primary_key.to_s,
+                      :dependent => nil
+                    )
+                  ]
+              end
+            rescue NameError # e.g. belongs_to :oops_this_is_not_a_table
+              []
             end
           }.flatten
         end

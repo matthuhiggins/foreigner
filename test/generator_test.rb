@@ -29,7 +29,7 @@ class GeneratorTest < Foreigner::AdapterTest
   test 'belongs_to should generate a foreign key' do
     class Author < MockModel; end
     class Book < MockModel
-      belongs_to :author
+      belongs_to :guy, :class_name => 'Author', :foreign_key => 'author_id'
     end
 
     assert_equal(
@@ -42,7 +42,7 @@ class GeneratorTest < Foreigner::AdapterTest
 
   test 'has_one should generate a foreign key' do
     class Author < MockModel
-      has_one :book, :order => "id DESC"
+      has_one :piece_de_resistance, :class_name => 'Book', :order => "id DESC"
     end
     class Book < MockModel; end
 
@@ -54,15 +54,43 @@ class GeneratorTest < Foreigner::AdapterTest
     )
   end
 
+  test 'has_one :dependent => :delete should generate a foreign key with :dependent => :delete' do
+    class Author < MockModel
+      has_one :book, :order => "id DESC", :dependent => :delete
+    end
+    class Book < MockModel; end
+
+    assert_equal(
+      [Foreigner::ConnectionAdapters::ForeignKeyDefinition.new(
+         'books', 'authors', :column => 'author_id', :primary_key => 'id', :dependent => :delete
+       )],
+      Foreigner::Migration::Generator.new_model_keys([], [Author, Book]).first
+    )
+  end
+
   test 'has_many should generate a foreign key' do
     class Author < MockModel
-      has_many :books
+      has_many :babies, :class_name => 'Book'
     end
     class Book < MockModel; end
 
     assert_equal(
       [Foreigner::ConnectionAdapters::ForeignKeyDefinition.new(
          'books', 'authors', :column => 'author_id', :primary_key => 'id', :dependent => nil
+       )],
+      Foreigner::Migration::Generator.new_model_keys([], [Author, Book]).first
+    )
+  end
+
+  test 'has_many :dependent => :delete_all should generate a foreign key with :dependent => :delete' do
+    class Author < MockModel
+      has_many :books, :dependent => :delete_all
+    end
+    class Book < MockModel; end
+
+    assert_equal(
+      [Foreigner::ConnectionAdapters::ForeignKeyDefinition.new(
+         'books', 'authors', :column => 'author_id', :primary_key => 'id', :dependent => :delete
        )],
       Foreigner::Migration::Generator.new_model_keys([], [Author, Book]).first
     )
@@ -82,6 +110,25 @@ class GeneratorTest < Foreigner::AdapterTest
          'authors_fans', 'fans', :column => 'fan_id', :primary_key => 'id', :dependent => nil
        )],
       Foreigner::Migration::Generator.new_model_keys([], [Author, Fan]).first
+    )
+  end
+
+  test 'conditional has_one/has_many associations should ignore :dependent' do
+    class Author < MockModel
+      has_many :articles, :conditions => "published", :dependent => :delete_all
+      has_one :favorite_book, :class_name => 'Book', :conditions => "most_awesome", :dependent => :delete
+    end
+    class Book < MockModel; end
+    class Article < MockModel; end
+
+    assert_equal(
+      [Foreigner::ConnectionAdapters::ForeignKeyDefinition.new(
+         'articles', 'authors', :column => 'author_id', :primary_key => 'id', :dependent => nil
+       ),
+       Foreigner::ConnectionAdapters::ForeignKeyDefinition.new(
+         'books', 'authors', :column => 'author_id', :primary_key => 'id', :dependent => nil
+       )],
+      Foreigner::Migration::Generator.new_model_keys([], [Article, Author, Book]).first
     )
   end
 
@@ -133,25 +180,6 @@ class GeneratorTest < Foreigner::AdapterTest
          'books', 'authors', :column => 'author_id', :primary_key => 'id', :dependent => nil
        )],
       Foreigner::Migration::Generator.new_model_keys([], [Author, Book]).first
-    )
-  end
-
-  test 'conditional has_one/has_many associations should ignore :dependent' do
-    class Author < MockModel
-      has_many :articles, :conditions => "published", :dependent => :delete_all
-      has_one :favorite_book, :class_name => 'Book', :conditions => "most_awesome", :dependent => :delete
-    end
-    class Book < MockModel; end
-    class Article < MockModel; end
-
-    assert_equal(
-      [Foreigner::ConnectionAdapters::ForeignKeyDefinition.new(
-         'articles', 'authors', :column => 'author_id', :primary_key => 'id', :dependent => nil
-       ),
-       Foreigner::ConnectionAdapters::ForeignKeyDefinition.new(
-         'books', 'authors', :column => 'author_id', :primary_key => 'id', :dependent => nil
-       )],
-      Foreigner::Migration::Generator.new_model_keys([], [Article, Author, Book]).first
     )
   end
 
@@ -232,6 +260,21 @@ class GeneratorTest < Foreigner::AdapterTest
          'authors_fans', 'fans', :column => 'fan_id', :primary_key => 'id', :dependent => nil
        )],
       Foreigner::Migration::Generator.new_model_keys([], [Author, AuthorsFan, Fan]).first
+    )
+  end
+
+  test 'broken associations should not cause errors' do
+    class Author < MockModel; end
+    class Book < MockModel
+      belongs_to :author
+      belongs_to :invalid
+    end
+
+    assert_equal(
+      [Foreigner::ConnectionAdapters::ForeignKeyDefinition.new(
+         'books', 'authors', :column => 'author_id', :primary_key => 'id', :dependent => nil
+       )],
+      Foreigner::Migration::Generator.new_model_keys([], [Author, Book]).first
     )
   end
 end
