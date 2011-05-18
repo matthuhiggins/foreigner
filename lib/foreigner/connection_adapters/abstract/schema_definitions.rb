@@ -40,9 +40,9 @@ module Foreigner
       # ====== Remove the suppliers_company_id_fk in the suppliers table.
       #   t.remove_foreign_key :companies
       # ====== Remove the foreign key named accounts_branch_id_fk in the accounts table.
-      #   remove_foreign_key :column => :branch_id
+      #   t.remove_foreign_key :column => :branch_id
       # ====== Remove the foreign key named party_foreign_key in the accounts table.
-      #   remove_index :name => :party_foreign_key
+      #   t.remove_index :name => :party_foreign_key
       def remove_foreign_key(options = {})
         @base.remove_foreign_key(@table_name, options)
       end
