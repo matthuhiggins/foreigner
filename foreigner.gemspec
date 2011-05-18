@@ -2,9 +2,9 @@
  
 Gem::Specification.new do |s|
   s.name = 'foreigner'
-  s.version = '0.9.2'
-  s.summary = 'Foreign keys for Rails'
-  s.description = 'Adds helpers to migrations and correctly dumps foreign keys to schema.rb'
+  s.version = '1.0.0'
+  s.summary = 'Foreign Keys for Rails'
+  s.description = 'Adds helpers to migrations and dumps foreign keys to schema.rb'
 
   s.required_ruby_version     = '>= 1.8.7'
   s.required_rubygems_version = '>= 1.3.5'
