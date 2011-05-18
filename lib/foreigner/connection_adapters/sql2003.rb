@@ -26,7 +26,7 @@ module Foreigner
         sql
       end
 
-      def remove_foreign_key(table, options)
+      def remove_foreign_key(table, to_table = nil, options)
         execute "ALTER TABLE #{quote_table_name(table)} #{remove_foreign_key_sql(table, options)}"
       end
 
