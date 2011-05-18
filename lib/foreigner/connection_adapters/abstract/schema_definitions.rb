@@ -53,28 +53,17 @@ module Foreigner
         @base.remove_foreign_key(@table_name, options)
       end
     
-      # Adds a :foreign_key option to Table.references.
-      # If :foreign_key is true, a foreign key constraint is added to the table.
-      # You can also specify a hash, which is passed as foreign key options.
-      # 
-      # ===== Examples
-      # ====== Add goat_id column and a foreign key to the goats table.
-      #  t.references(:goat, :foreign_key => true)
-      # ====== Add goat_id column and a cascading foreign key to the goats table.
-      #  t.references(:goat, :foreign_key => {:dependent => :delete})
-      # 
-      # Note: No foreign key is created if :polymorphic => true is used.
+      # Deprecated
       def references_with_foreign_keys(*args)
         options = args.extract_options!
-        polymorphic = options[:polymorphic]
-        fk_options = options.delete(:foreign_key)
+
+        if fk_options = options.delete(:foreign_key)
+          p ActiveSupport::Deprecation.send(:deprecation_message, caller,
+            ":foreign_key in t.references is deprecated. " \
+            "Use t.foreign_key instead")
+        end
 
         references_without_foreign_keys(*(args.dup << options))
-
-        if fk_options && !polymorphic
-          fk_options = {} if fk_options == true
-          args.each { |to_table| foreign_key(to_table, fk_options) }
-        end
       end
     end
   end
