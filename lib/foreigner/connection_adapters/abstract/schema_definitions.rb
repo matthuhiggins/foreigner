@@ -38,11 +38,17 @@ module Foreigner
       #
       # ===== Examples
       # ====== Remove the suppliers_company_id_fk in the suppliers table.
-      #   t.remove_foreign_key :companies
+      #   change_table :suppliers do |t|
+      #     t.remove_foreign_key :companies
+      #   end
       # ====== Remove the foreign key named accounts_branch_id_fk in the accounts table.
-      #   t.remove_foreign_key :column => :branch_id
+      #   change_table :accounts do |t|
+      #     t.remove_foreign_key :column => :branch_id
+      #   end
       # ====== Remove the foreign key named party_foreign_key in the accounts table.
-      #   t.remove_index :name => :party_foreign_key
+      #   change_table :accounts do |t|
+      #     t.remove_index :name => :party_foreign_key
+      #   end
       def remove_foreign_key(options = {})
         @base.remove_foreign_key(@table_name, options)
       end
