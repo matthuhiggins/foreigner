@@ -2,7 +2,7 @@ require 'rubygems'
 require 'test/unit'
 require 'rails/all'
 
-require 'foreigner'
+require File.expand_path('../../lib/foreigner', __FILE__)
 
 Foreigner::Adapter.registered.values.each do |file_name|
   require file_name

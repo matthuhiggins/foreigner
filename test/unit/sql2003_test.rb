@@ -1,6 +1,6 @@
 require 'helper'
 
-class Sql2003Test < Foreigner::AdapterTest
+class Foreigner::Sql2003Test < Foreigner::UnitTest
   include Foreigner::ConnectionAdapters::Sql2003
 
   test 'add_without_options' do

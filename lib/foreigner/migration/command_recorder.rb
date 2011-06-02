@@ -9,13 +9,22 @@ module Foreigner
         record(:remove_foreign_key, args)
       end
 
-      def invert_add_foreign_key(*args)
-        [:remove_foreign_key, *args]
-      end
-      
-      def invert_remove_foreign_key(*args)
-        [:add_foreign_key, *args]
+      def invert_add_foreign_key(args)#from_table, to_table, add_options = {})
+        from_table, to_table, add_options = *args
+        add_options ||= {}
+
+        if add_options[:name]
+          options = {:name => add_options[:name]}
+        elsif add_options[:column]
+          options = {:column => add_options[:column]}
+        else
+          options = to_table
+        end
+
+        [:remove_foreign_key, [from_table, options]]
       end
     end
   end
 end
+      
+

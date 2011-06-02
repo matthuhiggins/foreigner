@@ -1,6 +1,6 @@
 require 'helper'
 
-class Mysql2AdapterTest < Foreigner::AdapterTest
+class Foreigner::Mysql2AdapterTest < Foreigner::UnitTest
   include Foreigner::ConnectionAdapters::Mysql2Adapter
 
   test 'remove_by_table' do
