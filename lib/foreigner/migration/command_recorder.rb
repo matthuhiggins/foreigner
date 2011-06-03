@@ -9,7 +9,7 @@ module Foreigner
         record(:remove_foreign_key, args)
       end
 
-      def invert_add_foreign_key(args)#from_table, to_table, add_options = {})
+      def invert_add_foreign_key(args)
         from_table, to_table, add_options = *args
         add_options ||= {}
 
@@ -26,5 +26,3 @@ module Foreigner
     end
   end
 end
-      
-

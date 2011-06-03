@@ -49,7 +49,7 @@ module Foreigner
       #   change_table :accounts do |t|
       #     t.remove_index :name => :party_foreign_key
       #   end
-      def remove_foreign_key(options = {})
+      def remove_foreign_key(options)
         @base.remove_foreign_key(@table_name, options)
       end
     
