@@ -11,7 +11,10 @@ module Foreigner
           JOIN pg_class t2 ON c.confrelid = t2.oid
           JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
           JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
-          WHERE c.contype = 'f' AND t1.relname = '#{table_name}'
+          JOIN pg_namespace t3 ON c.connamespace = t3.oid
+          WHERE c.contype = 'f'
+            AND t1.relname = '#{table_name}'
+            AND t3.nspname = ANY (current_schemas(false))
           ORDER BY c.conname
         }
         
