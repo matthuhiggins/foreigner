@@ -39,6 +39,16 @@ module Foreigner
 
         "DROP CONSTRAINT #{quote_column_name(foreign_key_name)}"
       end
+      
+      def drop_table(table_name, options = {})
+        sql = "DROP TABLE #{quote_table_name(table_name)}"
+        if options[:force]
+         execute "#{sql} CASCADE"
+        else
+         execute sql
+        end
+      end
+      
 
       private
         def foreign_key_name(table, column, options = {})
