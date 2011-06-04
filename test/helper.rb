@@ -12,6 +12,7 @@ module Foreigner
   class UnitTest < ActiveSupport::TestCase
     private
       def execute(sql, name = nil)
+        sql_statements << sql
         sql
       end
 
@@ -21,6 +22,10 @@ module Foreigner
 
       def quote_table_name(name)
         quote_column_name(name).gsub('.', '`.`')
+      end
+
+      def sql_statements
+        @sql_statements ||= []
       end
   end
 

@@ -2,6 +2,12 @@ module Foreigner
   module ConnectionAdapters
     module Mysql2Adapter
       include Foreigner::ConnectionAdapters::Sql2003
+
+      def drop_table(table_name)
+        execute "SET FOREIGN_KEY_CHECKS=0"
+        execute "DROP TABLE #{quote_table_name(table_name)}"
+        execute "SET FOREIGN_KEY_CHECKS=1"
+      end
       
       def remove_foreign_key_sql(table, options)
         if Hash === options
