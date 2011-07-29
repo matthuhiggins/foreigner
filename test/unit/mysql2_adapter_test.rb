@@ -1,4 +1,5 @@
 require 'helper'
+require 'foreigner/connection_adapters/mysql2_adapter'
 
 class Foreigner::Mysql2AdapterTest < Foreigner::UnitTest
   include Foreigner::ConnectionAdapters::Mysql2Adapter

@@ -4,9 +4,9 @@ require 'rails/all'
 
 require File.expand_path('../../lib/foreigner', __FILE__)
 
-Foreigner::Adapter.registered.values.each do |file_name|
-  require file_name
-end
+# Foreigner::Adapter.registered.values.each do |file_name|
+#   require file_name
+# end
 
 module Foreigner
   class UnitTest < ActiveSupport::TestCase
