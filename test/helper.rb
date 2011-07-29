@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'test/unit'
-require 'rails/all'
+require 'active_record'
 
 require File.expand_path('../../lib/foreigner', __FILE__)
 

@@ -3,7 +3,7 @@ module Foreigner
     module PostgreSQLAdapter
       include Foreigner::ConnectionAdapters::Sql2003
 
-      def drop_table(table_name)
+      def drop_table(table_name, options = {})
         execute "DROP TABLE #{quote_table_name(table_name)} CASCADE"
       end
 

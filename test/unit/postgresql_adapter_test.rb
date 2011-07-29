@@ -10,4 +10,8 @@ class Foreigner::PostgreSQLAdapterTest < Foreigner::UnitTest
       drop_table(:widgets)
     )
   end
+
+  test 'drop_table with stupid options hash' do
+    drop_table :widgets, {}
+  end
 end

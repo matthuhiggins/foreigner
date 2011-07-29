@@ -1,3 +1,5 @@
+require 'active_support/all'
+
 module Foreigner
   extend ActiveSupport::Autoload
   autoload :Adapter
@@ -22,4 +24,4 @@ Foreigner::Adapter.register 'mysql', 'foreigner/connection_adapters/mysql_adapte
 Foreigner::Adapter.register 'mysql2', 'foreigner/connection_adapters/mysql2_adapter'
 Foreigner::Adapter.register 'postgresql', 'foreigner/connection_adapters/postgresql_adapter'
 
-require 'foreigner/railtie'
+require 'foreigner/railtie' if defined?(Rails)

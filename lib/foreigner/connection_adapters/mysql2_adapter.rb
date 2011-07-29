@@ -3,7 +3,7 @@ module Foreigner
     module Mysql2Adapter
       include Foreigner::ConnectionAdapters::Sql2003
 
-      def drop_table(table_name)
+      def drop_table(table_name, options = {})
         execute "SET FOREIGN_KEY_CHECKS=0"
         execute "DROP TABLE #{quote_table_name(table_name)}"
         execute "SET FOREIGN_KEY_CHECKS=1"

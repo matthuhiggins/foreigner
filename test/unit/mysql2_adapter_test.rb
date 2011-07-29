@@ -16,6 +16,10 @@ class Foreigner::Mysql2AdapterTest < Foreigner::UnitTest
     )
   end
 
+  test 'drop_table with stupid options hash' do
+    drop_table :widgets, {}
+  end
+
   test 'remove_foreign_key_sql by table' do
     assert_equal(
       "DROP FOREIGN KEY `suppliers_company_id_fk`",
