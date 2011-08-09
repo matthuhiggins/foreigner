@@ -3,22 +3,6 @@ require 'foreigner/connection_adapters/mysql2_adapter'
 
 class Foreigner::Mysql2AdapterTest < Foreigner::UnitTest
   include Foreigner::ConnectionAdapters::Mysql2Adapter
-  
-  test 'drop_table' do
-    drop_table :widgets
-    assert_equal(
-      [
-        "SET FOREIGN_KEY_CHECKS=0",
-        "DROP TABLE `widgets`",
-        "SET FOREIGN_KEY_CHECKS=1"
-      ],
-      sql_statements
-    )
-  end
-
-  test 'drop_table with stupid options hash' do
-    drop_table :widgets, {}
-  end
 
   test 'remove_foreign_key_sql by table' do
     assert_equal(

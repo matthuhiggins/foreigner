@@ -3,10 +3,6 @@ module Foreigner
     module PostgreSQLAdapter
       include Foreigner::ConnectionAdapters::Sql2003
 
-      def drop_table(table_name, options = {})
-        execute "DROP TABLE #{quote_table_name(table_name)} CASCADE"
-      end
-
       def foreign_keys(table_name)
         fk_info = select_all %{
           SELECT t2.relname AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confdeltype AS dependency
