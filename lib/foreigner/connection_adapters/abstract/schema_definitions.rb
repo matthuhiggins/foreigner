@@ -1,6 +1,13 @@
 module Foreigner
   module ConnectionAdapters
     class ForeignKeyDefinition < Struct.new(:from_table, :to_table, :options) #:nodoc:
+      def initialize(from_table, to_table, options)
+        options[:name] ||= "#{from_table}_#{options[:column]}_fk"
+        super
+      end
+      def hash_key
+        [from_table, options[:column]]
+      end
     end
     
     module SchemaDefinitions
