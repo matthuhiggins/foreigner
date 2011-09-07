@@ -16,6 +16,6 @@ Gem::Specification.new do |s|
 
   s.extra_rdoc_files = %w(README.rdoc)
   s.files = %w(MIT-LICENSE Rakefile README.rdoc) + Dir['lib/**/*.rb'] + Dir['test/**/*.rb']
-  s.add_dependency('activerecord', '>= 3.1.0')
+  s.add_dependency('activerecord', '>= 3.0.0')
   s.add_development_dependency('activerecord', '>= 3.1.0')
 end
