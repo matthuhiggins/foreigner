@@ -5,14 +5,22 @@ module Foreigner
     included do
       alias_method_chain :tables, :foreign_keys
     end
-    
+
     def tables_with_foreign_keys(stream)
       tables_without_foreign_keys(stream)
       @connection.tables.sort.each do |table|
+        next if ['schema_migrations', ignore_tables].flatten.any? do |ignored|
+          case ignored
+          when String; table == ignored
+          when Regexp; table =~ ignored
+          else
+            raise StandardError, 'ActiveRecord::SchemaDumper.ignore_tables accepts an array of String and / or Regexp values.'
+          end
+        end
         foreign_keys(table, stream)
       end
     end
-    
+
     private
       def foreign_keys(table_name, stream)
         if (foreign_keys = @connection.foreign_keys(table_name)).any?
@@ -20,7 +28,7 @@ module Foreigner
             statement_parts = [ ('add_foreign_key ' + foreign_key.from_table.inspect) ]
             statement_parts << foreign_key.to_table.inspect
             statement_parts << (':name => ' + foreign_key.options[:name].inspect)
-            
+
             if foreign_key.options[:column] != "#{foreign_key.to_table.singularize}_id"
               statement_parts << (':column => ' + foreign_key.options[:column].inspect)
             end
