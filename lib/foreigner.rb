@@ -24,5 +24,7 @@ Foreigner::Adapter.register 'mysql', 'foreigner/connection_adapters/mysql_adapte
 Foreigner::Adapter.register 'mysql2', 'foreigner/connection_adapters/mysql2_adapter'
 Foreigner::Adapter.register 'jdbcmysql', 'foreigner/connection_adapters/mysql2_adapter'
 Foreigner::Adapter.register 'postgresql', 'foreigner/connection_adapters/postgresql_adapter'
+Foreigner::Adapter.register 'sqlserver', 'foreigner/connection_adapters/sqlserver_adapter'
+Foreigner::Adapter.register 'jdbc', 'foreigner/connection_adapters/sqlserver_adapter'
 
 require 'foreigner/railtie' if defined?(Rails)
