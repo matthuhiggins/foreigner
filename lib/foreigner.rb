@@ -21,5 +21,6 @@ end
 Foreigner::Adapter.register 'mysql2', 'foreigner/connection_adapters/mysql2_adapter'
 Foreigner::Adapter.register 'postgresql', 'foreigner/connection_adapters/postgresql_adapter'
 Foreigner::Adapter.register 'sqlserver', 'foreigner/connection_adapters/sqlserver_adapter'
+Foreigner::Adapter.register 'jdbc', 'foreigner/connection_adapters/sqlserver_adapter'
 
 require 'foreigner/railtie'
