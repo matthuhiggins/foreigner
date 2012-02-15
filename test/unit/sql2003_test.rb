@@ -1,15 +1,24 @@
 require 'helper'
 
 class Foreigner::Sql2003Test < Foreigner::UnitTest
-  class Sql2003Adapter < TestAdapter
+  class TestAdapter
+    include TestAdapterMethods
     include Foreigner::ConnectionAdapters::Sql2003
   end
 
   setup do
-    @adapter = Sql2003Adapter.new
+    @adapter = TestAdapter.new
   end
 
-  # test 
+  test 'drop_table without force' do
+    @adapter.drop_table 'shoes'
+    assert !@adapter.instance_variable_get(:@disable_referential_integrity)
+  end
+
+  test 'drop_table with force' do
+    @adapter.drop_table 'shoes', force: true
+    assert @adapter.instance_variable_get(:@disable_referential_integrity)
+  end
 
   test 'add_without_options' do
     assert_equal(

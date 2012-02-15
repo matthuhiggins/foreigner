@@ -8,7 +8,7 @@ require 'active_record'
 #   require file_name
 # end
 
-class TestAdapter
+module TestAdapterMethods
   def execute(sql, name = nil)
     sql_statements << sql
     sql
@@ -24,6 +24,14 @@ class TestAdapter
 
   def sql_statements
     @sql_statements ||= []
+  end
+
+  def drop_table(name, options = {})  
+  end
+
+  def disable_referential_integrity
+    @disable_referential_integrity = true
+    yield
   end
 
   private
