@@ -33,12 +33,14 @@ class Foreigner::SchemaDumperTest < Foreigner::UnitTest
     end
   end
 
-  test 'returns_all_tables' do
-    assert MockSchemaDumper.new(nil).processed_tables.sort.to_s, "['bar', 'foo']"
+  test 'all tables' do
+    MockSchemaDumper.ignore_tables = []
+    assert MockSchemaDumper.new.processed_tables.sort.to_s, "['bar', 'foo']"
   end
 
-  test 'only_returns_1_table' do
-    assert MockSchemaDumper.new('foo').processed_tables.to_s, "['bar']"
+  test 'ignores tables' do
+    MockSchemaDumper.ignore_tables = ['foo']
+    assert MockSchemaDumper.new.processed_tables.to_s, "['bar']"
   end
 end
 
