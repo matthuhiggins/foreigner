@@ -3,6 +3,7 @@ require 'active_support/all'
 module Foreigner
   extend ActiveSupport::Autoload
   autoload :Adapter
+  autoload :Loader
   autoload :SchemaDumper
 
   module ConnectionAdapters
