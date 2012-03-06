@@ -6,7 +6,12 @@ module Foreigner
       end
 
       def drop_table(*args)
-        disable_referential_integrity { super }
+        options = args.extract_options!
+        if options[:force]
+          disable_referential_integrity { super }
+        else
+          super
+        end
       end
 
       def add_foreign_key(from_table, to_table, options = {})
