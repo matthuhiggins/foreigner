@@ -38,6 +38,13 @@ module Foreigner
             if foreign_key.options[:dependent].present?
               statement_parts << (':dependent => ' + foreign_key.options[:dependent].inspect)
             end
+            if foreign_key.options[:deferrable]
+              additional_options = "DEFERRABLE"
+              if foreign_key.options[:initially_deferred]
+                additional_options << " INITIALLY DEFERRED"
+              end
+              statement_parts << ":options => '#{additional_options}'"
+            end
 
             '  ' + statement_parts.join(', ')
           end

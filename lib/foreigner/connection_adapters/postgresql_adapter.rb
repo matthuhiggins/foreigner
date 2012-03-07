@@ -5,7 +5,14 @@ module Foreigner
 
       def foreign_keys(table_name)
         fk_info = select_all %{
-          SELECT t2.relname AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confdeltype AS dependency
+          SELECT
+            t2.relname AS to_table,
+            a1.attname AS column,
+            a2.attname AS primary_key,
+            c.conname AS name,
+            c.confdeltype AS dependency,
+            c.condeferrable AS deferrable,
+            c.condeferred AS initially_deferred
           FROM pg_constraint c
           JOIN pg_class t1 ON c.conrelid = t1.oid
           JOIN pg_class t2 ON c.confrelid = t2.oid
@@ -17,9 +24,15 @@ module Foreigner
             AND t3.nspname = ANY (current_schemas(false))
           ORDER BY c.conname
         }
-        
+
         fk_info.map do |row|
-          options = {:column => row['column'], :name => row['name'], :primary_key => row['primary_key']}
+          options = {
+            :column => row['column'],
+            :name => row['name'],
+            :primary_key => row['primary_key'],
+            :deferrable => row['deferrable'],
+            :initially_deferred => row['initially_deferred']
+          }
 
           options[:dependent] = case row['dependency']
             when 'c' then :delete
