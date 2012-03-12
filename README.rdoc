@@ -1,4 +1,5 @@
 = Foreigner
+{<img src="https://secure.travis-ci.org/matthuhiggins/foreigner.png?rvm=1.9.3" />}[http://travis-ci.org/matthuhiggins/foreigner]
 
 Foreigner introduces a few methods to your migrations for adding and removing foreign key constraints. It also dumps foreign keys to schema.rb.
 
