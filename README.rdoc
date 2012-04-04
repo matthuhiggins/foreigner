@@ -67,4 +67,4 @@ Remove an unwanted foreign key:
 
 == License
 
-Copyright (c) 2011 Matthew Higgins, released under the MIT license
+Copyright (c) 2012 Matthew Higgins, released under the MIT license
