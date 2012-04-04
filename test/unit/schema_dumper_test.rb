@@ -9,38 +9,48 @@ class Foreigner::SchemaDumperTest < Foreigner::UnitTest
   end
 
   class MockSchemaDumper
-    cattr_accessor :ignore_tables, :processed_tables
-    @@ignore_table = []
-    @@processed_tables = []
+    cattr_accessor :ignore_tables
 
-    @connection = MockConnection.new
-
-    # need this here so ActiveRecord::Concern has something to redefine
-    def tables
+    attr_accessor :processed_tables
+    def initialize
+      @connection = MockConnection.new
+      @processed_tables = []
     end
 
-    include Foreigner::SchemaDumper
+    def tables(stream)
+    end
 
-    # override this method so we don't have to mock up
-    # all of the necessary scafolding for things to work
     def foreign_keys(table, stream)
       processed_tables << table
     end
 
-    def tables(ignore_list)
-      ignore_tables = ignore_list
-      processed_table = nil
-    end
+    include Foreigner::SchemaDumper
+  end
+
+  test 'dump_foreign_key' do
+    assert_dump "add_foreign_key \"foos\", \"bars\", :name => \"lulz\"", Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('foos', 'bars', column: 'bar_id', primary_key: 'id', name: 'lulz')
+    assert_dump "add_foreign_key \"foos\", \"bars\", :name => \"lulz\", :primary_key => \"uuid\"", Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('foos', 'bars', column: 'bar_id', primary_key: 'uuid', name: 'lulz')
+    assert_dump "add_foreign_key \"foos\", \"bars\", :name => \"lulz\", :dependent => :delete", Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('foos', 'bars', column: 'bar_id', primary_key: 'id', name: 'lulz', dependent: :delete)
+    assert_dump "add_foreign_key \"foos\", \"bars\", :name => \"lulz\", :column => \"mamma_id\"", Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('foos', 'bars', column: 'mamma_id', primary_key: 'id', name: 'lulz')
   end
 
   test 'all tables' do
     MockSchemaDumper.ignore_tables = []
-    assert MockSchemaDumper.new.processed_tables.sort.to_s, "['bar', 'foo']"
+    dumper = MockSchemaDumper.new
+    dumper.tables(StringIO.new)
+    assert_equal ['bar', 'foo'].to_set, dumper.processed_tables.to_set
   end
 
   test 'ignores tables' do
     MockSchemaDumper.ignore_tables = ['foo']
-    assert MockSchemaDumper.new.processed_tables.to_s, "['bar']"
+    dumper = MockSchemaDumper.new
+    dumper.tables(StringIO.new)
+    assert_equal ['bar'].to_set, dumper.processed_tables.to_set
   end
+
+  private
+    def assert_dump(expected, definition)
+      assert_equal expected, MockSchemaDumper.dump_foreign_key(definition)
+    end
 end
 
