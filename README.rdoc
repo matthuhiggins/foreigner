@@ -68,7 +68,7 @@ Remove an unwanted foreign key:
 
 == Finding Missing Foreign Keys
 
-Use https://github.com/jenseng/immigrant to generate a migration that includes all missing foreign keys.
+Use {Immigrant}[https://github.com/jenseng/immigrant] to generate a migration that includes all missing foreign keys.
 
 == License
 
