@@ -66,6 +66,10 @@ Remove an unwanted foreign key:
     t.remove_foreign_key :users
   end
 
+== Finding Missing Foreign Keys
+
+Use https://github.com/jenseng/immigrant to generate a migration that includes all missing foreign keys.
+
 == License
 
 Copyright (c) 2012 Matthew Higgins, released under the MIT license
