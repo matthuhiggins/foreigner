@@ -1,8 +1,5 @@
 module Foreigner
-  module ConnectionAdapters
-    class ForeignKeyDefinition < Struct.new(:from_table, :to_table, :options) #:nodoc:
-    end
-    
+  module ConnectionAdapters    
     module SchemaDefinitions
       def self.included(base)
         base::Table.class_eval do

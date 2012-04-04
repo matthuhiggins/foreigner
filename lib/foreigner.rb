@@ -10,6 +10,7 @@ module Foreigner
     autoload :Sql2003
 
     autoload_under 'abstract' do
+      autoload :ForeignKeyDefinition
       autoload :SchemaDefinitions
       autoload :SchemaStatements
     end
