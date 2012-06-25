@@ -26,13 +26,13 @@ module Foreigner
       #     `comments_post_id_fk` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`)
       # 
       # ====== Creating a named foreign key
-      #  add_foreign_key(:comments, :posts, :name => 'comments_belongs_to_posts')
+      #  add_foreign_key(:comments, :posts, name: 'comments_belongs_to_posts')
       # generates
       #  ALTER TABLE `comments` ADD CONSTRAINT
       #     `comments_belongs_to_posts` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`)
       # 
       # ====== Creating a cascading foreign_key on a custom column
-      #  add_foreign_key(:people, :people, :column => 'best_friend_id', :dependent => :nullify)
+      #  add_foreign_key(:people, :people, column: 'best_friend_id', dependent: :nullify)
       # generates
       #  ALTER TABLE `people` ADD CONSTRAINT
       #     `people_best_friend_id_fk` FOREIGN KEY (`best_friend_id`) REFERENCES `people` (`id`)
@@ -62,9 +62,9 @@ module Foreigner
       # ====== Remove the suppliers_company_id_fk in the suppliers table.
       #   remove_foreign_key :suppliers, :companies
       # ====== Remove the foreign key named accounts_branch_id_fk in the accounts table.
-      #   remove_foreign_key :accounts, :column => :branch_id
+      #   remove_foreign_key :accounts, column: :branch_id
       # ====== Remove the foreign key named party_foreign_key in the accounts table.
-      #   remove_foreign_key :accounts, :name => :party_foreign_key
+      #   remove_foreign_key :accounts, name: :party_foreign_key
       def remove_foreign_key(from_table, options)
       end
 

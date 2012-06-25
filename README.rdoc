@@ -31,7 +31,7 @@ For example, given the following model:
   end
   
   class Post < ActiveRecord::Base
-    has_many :comments, :dependent => :delete_all
+    has_many :comments, dependent: :delete_all
   end
   
 You should add a foreign key in your migration:
@@ -40,15 +40,15 @@ You should add a foreign key in your migration:
 
 The :dependent option can be moved from the has_many definition to the foreign key:
 
-  add_foreign_key(:comments, :posts, :dependent => :delete)
+  add_foreign_key(:comments, :posts, dependent: :delete)
 
 If the column is named article_id instead of post_id, use the :column option:
 
-  add_foreign_key(:comments, :posts, :column => 'article_id')
+  add_foreign_key(:comments, :posts, column: 'article_id')
   
 A name can be specified for the foreign key constraint:
 
-  add_foreign_key(:comments, :posts, :name => 'comment_article_foreign_key')
+  add_foreign_key(:comments, :posts, name: 'comment_article_foreign_key')
 
 == Change Table Methods
 
@@ -57,7 +57,7 @@ Foreigner adds extra methods to change_table.
 Add a missing foreign key to comments:
 
   change_table :comments do |t|
-    t.foreign_key :posts, :dependent => :delete
+    t.foreign_key :posts, dependent: :delete
   end
 
 Remove an unwanted foreign key:
