@@ -11,11 +11,14 @@ module Foreigner
       def load!
         if registered.key?(configured_name)
           require registered[configured_name]
+        else
+          p "Database adapter #{configured_name} not supported. Use:\n" +
+            "Foreigner::Adapter.register '#{configured_name}', 'path/to/adapter'"
         end
       end
 
       def configured_name
-        ActiveRecord::Base.connection_pool.spec.config[:adapter]
+        @configured_name ||= ActiveRecord::Base.connection_pool.spec.config[:adapter]
       end
     end
   end
