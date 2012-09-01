@@ -8,7 +8,7 @@ module Foreigner
       end
     end
   
-    class Table
+    module Table
       extend ActiveSupport::Concern
 
       included do
