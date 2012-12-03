@@ -13,6 +13,8 @@ module Foreigner
       autoload :ForeignKeyDefinition
       autoload :SchemaDefinitions
       autoload :SchemaStatements
+      autoload :Table
+      autoload :TableDefinition
     end
   end
 
