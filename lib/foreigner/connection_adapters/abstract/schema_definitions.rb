@@ -5,9 +5,23 @@ module Foreigner
         base::Table.class_eval do
           include Foreigner::ConnectionAdapters::Table
         end
+
+        base::TableDefinition.class_eval do
+          include Foreigner::ConnectionAdapters::TableDefinition
+        end
       end
     end
-  
+
+    module TableDefinition
+      def foreign_key(to_table, options = {})
+        foreign_keys[to_table] = options
+      end
+
+      def foreign_keys
+        @foreign_keys ||= {}
+      end
+    end
+
     module Table
       extend ActiveSupport::Concern
 

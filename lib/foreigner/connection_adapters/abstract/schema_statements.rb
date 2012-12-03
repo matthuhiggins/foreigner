@@ -9,6 +9,12 @@ module Foreigner
     end
     
     module AbstractAdapter
+      def create_table(table_name, *args, &block)
+        definition = nil
+        super { |td| definition = td } # This is my trick to get the definition
+        td.foreign_keys.each { |c,o| add_foreign_key table_name, c, o }
+      end
+
       def supports_foreign_keys?
         false
       end
