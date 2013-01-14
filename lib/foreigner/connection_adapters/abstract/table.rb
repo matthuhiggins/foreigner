@@ -36,7 +36,7 @@ module Foreigner
       #   end
       # ====== Remove the foreign key named party_foreign_key in the accounts table.
       #   change_table :accounts do |t|
-      #     t.remove_index name: :party_foreign_key
+      #     t.remove_foreign_key name: :party_foreign_key
       #   end
       def remove_foreign_key(options)
         @base.remove_foreign_key(@table_name, options)
