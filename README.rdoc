@@ -52,7 +52,15 @@ A name can be specified for the foreign key constraint:
 
 == Change Table Methods
 
-Foreigner adds extra methods to change_table.
+Foreigner adds extra methods to create_table and change_table.
+
+Create a new table with a foreign key:
+  
+  create_table :products do |t|
+    t.string :name
+    t.integer :factory_id
+    t.foreign_key :factories
+  end
 
 Add a missing foreign key to comments:
 
