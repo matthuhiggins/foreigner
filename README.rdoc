@@ -76,8 +76,8 @@ Remove an unwanted foreign key:
 
 == Foreigner Add-ons
 
-{immigrant}[https://github.com/jenseng/immigrant] - generate a migration that includes all missing foreign keys.
-{sqlserver-foreigner}https://github.com/cleblanc87/sqlserver-foreigner - A plugin for SQL Server.
+  * {immigrant}[https://github.com/jenseng/immigrant] - generate a migration that includes all missing foreign keys.
+  * {sqlserver-foreigner}https://github.com/cleblanc87/sqlserver-foreigner - A plugin for SQL Server.
 
 == License
 
