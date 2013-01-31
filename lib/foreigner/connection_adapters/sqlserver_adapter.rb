@@ -11,9 +11,8 @@ module Foreigner
                   from_column.name AS from_column,
                   to_column.name AS primary_key,
                   foreign_key.name AS name,
-                  CASE WHEN foreign_key.status & 4096 <> 0
-                  THEN 'c' ELSE 'r'
-                  END AS dependency
+		  OBJECTPROPERTY(foreign_key.id,'CnstIsUpdateCascade') as update_is_cascade,
+		  OBJECTPROPERTY(foreign_key.id,'CnstIsDeleteCascade') as delete_is_cascade
           FROM    sysobjects AS from_table,
                   sysforeignkeys AS f,
                   sysobjects AS to_table,
@@ -35,11 +34,17 @@ module Foreigner
         fk_info.map do |row|
           options = {:column => row['from_column'], :name => row['name'], :primary_key => row['primary_key']}
 
-          options[:dependent] = case row['dependency']
-            when 'c' then :delete
-            when 'n' then :nullify    # Not currently extracted
-            when 'r' then :restrict
-          end
+          options[:dependent] =
+	    if row['delete_is_cascade']
+	      if row['update_is_cascade']
+		:cascade
+	      else
+		:delete
+	      end
+	    else
+	      :restrict
+	    end
+	    # Don't know how to extract ON DELETE DEFAULT, ON DELETE SET NULL
 
           ForeignKeyDefinition.new(table_name, row['to_table'], options)
         end

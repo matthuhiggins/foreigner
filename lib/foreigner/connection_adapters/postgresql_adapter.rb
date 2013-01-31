@@ -5,7 +5,7 @@ module Foreigner
 
       def foreign_keys(table_name)
         fk_info = select_all %{
-          SELECT t2.relname AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confdeltype AS dependency
+          SELECT t2.relname AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confdeltype AS dependency, c.confupdtype AS updtype
           FROM pg_constraint c
           JOIN pg_class t1 ON c.conrelid = t1.oid
           JOIN pg_class t2 ON c.confrelid = t2.oid
@@ -22,9 +22,16 @@ module Foreigner
           options = {:column => row['column'], :name => row['name'], :primary_key => row['primary_key']}
 
           options[:dependent] = case row['dependency']
-            when 'c' then :delete
-            when 'n' then :nullify
-            when 'r' then :restrict
+            when 'c' then
+	      if row['updtype'] == 'c'
+		:cascade
+	      else
+		:delete
+	      end
+            when 'n' then :nullify    # set null
+            when 'r' then :restrict   # restrict
+	    when 'a' then nil	      # no action
+	    when 'd' then :default    
           end
 
           ForeignKeyDefinition.new(table_name, row['to_table'], options)
