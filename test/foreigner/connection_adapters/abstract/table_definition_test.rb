@@ -8,7 +8,7 @@ class Foreigner::ConnectionAdapters::TableDefinitionsTest < ActiveSupport::TestC
   test "foreign_key used once" do
     definition = TestDefinition.new
     definition.foreign_key :poops, and: :one;
-    assert_equal({ and: :one }, definition.foreign_keys[:poops])
+    assert_equal [{ and: :one }], definition.foreign_keys[:poops]
   end
 
   test "foreign_key used twice" do
