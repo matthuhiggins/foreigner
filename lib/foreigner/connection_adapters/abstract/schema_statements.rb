@@ -15,7 +15,11 @@ module Foreigner
           definition = td # This is my trick to get the definition
           block.call(td)
         end
-        definition.foreign_keys.each { |c,o| add_foreign_key table_name, c, o }
+        definition.foreign_keys.each do |to_table, options_list|
+          options_list.each do |options|
+            add_foreign_key(table_name, to_table, options)
+          end
+        end
       end
 
       def supports_foreign_keys?
