@@ -50,6 +50,19 @@ A name can be specified for the foreign key constraint:
 
   add_foreign_key(:comments, :posts, name: 'comment_article_foreign_key')
 
+If you have foreign keys that are enforced against unique columns that are not Rails id columns
+and may be updated, and your Foreigner adapter supports it, you should use dependent: :cascade.
+This cascades both deletes and updates:
+
+  add_foreign_key(:people, :salutation, :column: :salutation_value, :primary_key: :salutation_value, :dependent: :cascade
+
+This way if you change a salutation (e.g., Rev to Reverend) the change will cascade into the people table.
+
+Currently the SQL2003 adapters (PostgreSQL and Mysql2) support creating such FKs, but only PG
+reflects them. The foreigner-sqlserver gem also works both ways.
+
+Finally, some adapters may support :dependent :default, which affects the delete behaviour while still cascading updates. Use the source, Luke!
+
 == Change Table Methods
 
 Foreigner adds extra methods to change_table.
