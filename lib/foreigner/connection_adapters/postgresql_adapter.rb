@@ -5,7 +5,7 @@ module Foreigner
 
       def foreign_keys(table_name)
         fk_info = select_all %{
-          SELECT t2.relname AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confdeltype AS dependency
+          SELECT t2.relname AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS update_dependency, c.confdeltype AS delete_dependency
           FROM pg_constraint c
           JOIN pg_class t1 ON c.conrelid = t1.oid
           JOIN pg_class t2 ON c.confrelid = t2.oid
@@ -21,7 +21,13 @@ module Foreigner
         fk_info.map do |row|
           options = {:column => row['column'], :name => row['name'], :primary_key => row['primary_key']}
 
-          options[:dependent] = case row['dependency']
+          options[:update_dependent] = case row['update_dependency']
+            when 'c' then :update
+            when 'n' then :nullify
+            when 'r' then :restrict
+          end
+
+          options[:delete_dependent] = case row['delete_dependency']
             when 'c' then :delete
             when 'n' then :nullify
             when 'r' then :restrict

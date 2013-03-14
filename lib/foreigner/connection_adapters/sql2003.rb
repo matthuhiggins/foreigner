@@ -23,13 +23,15 @@ module Foreigner
         column  = options[:column] || "#{to_table.to_s.singularize}_id"
         foreign_key_name = foreign_key_name(from_table, column, options)
         primary_key = options[:primary_key] || "id"
-        dependency = dependency_sql(options[:dependent])
+        update_dependency = dependency_sql('UPDATE', options[:update_dependent])
+        delete_dependency = dependency_sql('DELETE', options[:dependent] || options[:delete_dependent])
 
         sql =
           "ADD CONSTRAINT #{quote_column_name(foreign_key_name)} " +
           "FOREIGN KEY (#{quote_column_name(column)}) " +
           "REFERENCES #{quote_table_name(ActiveRecord::Migrator.proper_table_name(to_table))}(#{primary_key})"
-        sql << " #{dependency}" if dependency.present?
+        sql << " #{update_dependency}" if update_dependency.present?
+        sql << " #{delete_dependency}" if delete_dependency.present?
         sql << " #{options[:options]}" if options[:options]
 
         sql
@@ -58,11 +60,11 @@ module Foreigner
           end
         end
 
-        def dependency_sql(dependency)
+        def dependency_sql(type, dependency)
           case dependency
-            when :nullify then "ON DELETE SET NULL"
-            when :delete  then "ON DELETE CASCADE"
-            when :restrict then "ON DELETE RESTRICT"
+            when :nullify          then "ON #{type} SET NULL"
+            when :update, :delete  then "ON #{type} CASCADE"
+            when :restrict         then "ON #{type} RESTRICT"
             else ""
           end
         end

@@ -61,7 +61,10 @@ module Foreigner
       #   assumed to be "id".
       # [:name]
       #   Specify the name of the foreign key constraint. This defaults to use from_table and foreign key column.
-      # [:dependent]
+      # [:update_dependent]
+      #   If set to <tt>:update</tt>, the associated records in from_table are update when records in to_table table are update.
+      #   If set to <tt>:nullify</tt>, the foreign key column is set to +NULL+.
+      # [:delete_dependent]
       #   If set to <tt>:delete</tt>, the associated records in from_table are deleted when records in to_table table are deleted.
       #   If set to <tt>:nullify</tt>, the foreign key column is set to +NULL+.
       # [:options]
