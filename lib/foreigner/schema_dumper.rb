@@ -24,6 +24,9 @@ module Foreigner
         if foreign_key.options[:delete_dependent].present?
           statement_parts << (':delete_dependent => ' + foreign_key.options[:delete_dependent].inspect)
         end
+        if foreign_key.options[:options].present?
+          statement_parts << (':options => ' + foreign_key.options[:options].inspect)
+        end
 
         statement_parts.join(', ')
       end
