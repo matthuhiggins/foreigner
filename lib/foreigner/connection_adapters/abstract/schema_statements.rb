@@ -13,7 +13,7 @@ module Foreigner
         definition = nil
         super do |td|
           definition = td # This is my trick to get the definition
-          block.call(td)
+          block.call(td) unless block.nil?
         end
         definition.foreign_keys.each do |to_table, options_list|
           options_list.each do |options|
