@@ -71,11 +71,11 @@ module Foreigner
 
         def on_update_action_sql(update_action)
           case update_action
-            when :none        then 'ON UPDATE NO ACTION'
-            when :restrict    then 'ON UPDATE RESTRICT'
-            when :cascade     then 'ON UPDATE CASCADE'
-            when :set_null    then 'ON UPDATE SET NULL'
-            when :set_default then 'ON UPDATE SET DEFAULT'
+            when :none        then 'ON UPDATE NO ACTION'    # PgSQL, MySQL
+            when :restrict    then 'ON UPDATE RESTRICT'     # PgSQL, MySQL
+            when :cascade     then 'ON UPDATE CASCADE'      # PgSQL, MySQL
+            when :set_null    then 'ON UPDATE SET NULL'     # PgSQL, MySQL
+            when :set_default then 'ON UPDATE SET DEFAULT'  # PgSQL
             else ''
           end
         end
