@@ -37,7 +37,26 @@ module Foreigner
               when 'RESTRICT' then :restrict
             end
           end
+
+          on_update_action = extract_on_update_for_row(create_table_info, row['name'])
+          if !on_update_action.nil?
+            options[:on_update] = on_update_action
+          end
+          
           ForeignKeyDefinition.new(table_name, row['to_table'], options)
+        end
+      end
+      
+      def extract_on_update_for_row(create_table_info, row_name)
+        if create_table_info =~ /CONSTRAINT #{quote_column_name(row_name)} FOREIGN KEY .* REFERENCES .* ON UPDATE (CASCADE|SET NULL|RESTRICT|NO ACTION)/
+          return case $1
+            when 'CASCADE' then :cascade
+            when 'RESTRICT' then :restrict
+            when 'SET NULL' then :set_null
+            when 'NO ACTION' then :none
+          end
+        else
+          return nil
         end
       end
     end

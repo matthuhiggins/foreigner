@@ -100,4 +100,37 @@ class Foreigner::Sql2003Test < Foreigner::UnitTest
       @adapter.remove_foreign_key(:suppliers, :column => "ship_to_id")
     )
   end
+  
+  # Update action tests:  
+  test 'add_with_restrict_action' do
+    assert_equal(
+      "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
+      "ON UPDATE RESTRICT",
+      @adapter.add_foreign_key(:employees, :companies, :on_update => :restrict)
+    )
+  end
+  
+  test 'add_with_cascade_action' do
+    assert_equal(
+      "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
+      "ON UPDATE CASCADE",
+      @adapter.add_foreign_key(:employees, :companies, :on_update => :cascade)
+    )
+  end
+  
+  test 'add_with_set_null_action' do
+    assert_equal(
+      "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
+      "ON UPDATE SET NULL",
+      @adapter.add_foreign_key(:employees, :companies, :on_update => :set_null)
+    )
+  end
+  
+  test 'add_with_set_default_action' do
+    assert_equal(
+      "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
+      "ON UPDATE SET DEFAULT",
+      @adapter.add_foreign_key(:employees, :companies, :on_update => :set_default)
+    )
+  end
 end
