@@ -62,6 +62,8 @@ module Foreigner
           case dependency
             when :nullify then "ON DELETE SET NULL"
             when :delete  then "ON DELETE CASCADE"
+            when :cascade  then "ON DELETE CASCADE ON UPDATE CASCADE"
+            when :default  then "ON DELETE SET DEFAULT ON UPDATE CASCADE"
             when :restrict then "ON DELETE RESTRICT"
             else ""
           end
