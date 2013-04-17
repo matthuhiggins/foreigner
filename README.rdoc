@@ -74,6 +74,12 @@ Remove an unwanted foreign key:
     t.remove_foreign_key :users
   end
 
+== Database specific options
+
+Database specific options will never be supported by foreigner. You can add them using :options:
+
+  add_foreign_key(:comments, :posts, options: 'ON UPDATE DEFERRED')
+
 == Foreigner Add-ons
 
 * {immigrant}[https://github.com/jenseng/immigrant] - generate a migration that includes all missing foreign keys.
