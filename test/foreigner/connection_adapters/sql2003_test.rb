@@ -48,27 +48,68 @@ class Foreigner::Sql2003Test < Foreigner::UnitTest
     )
   end
   
-  test 'add_with_delete_dependency' do
+  test 'add_with_update_update_dependency' do
+    assert_equal(
+      "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
+      "ON UPDATE CASCADE",
+      @adapter.add_foreign_key(:employees, :companies, :update_dependent => :update)
+    )
+  end
+
+  test 'add_with_nullify_update_dependency' do
+    assert_equal(
+      "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
+      "ON UPDATE SET NULL",
+      @adapter.add_foreign_key(:employees, :companies, :update_dependent => :nullify)
+    )
+  end
+
+  test 'add_with_restrict_update_dependency' do
+    assert_equal(
+      "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
+      "ON UPDATE RESTRICT",
+      @adapter.add_foreign_key(:employees, :companies, :update_dependent => :restrict)
+    )
+  end
+
+  test 'add_with_delete_delete_dependency' do
+    assert_equal(
+      "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
+      "ON DELETE CASCADE",
+      @adapter.add_foreign_key(:employees, :companies, :delete_dependent => :delete)
+    )
+  end
+  
+  test 'add_with_nullify_delete_dependency' do
+    assert_equal(
+      "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
+      "ON DELETE SET NULL",
+      @adapter.add_foreign_key(:employees, :companies, :delete_dependent => :nullify)
+    )
+  end
+  
+  test 'add_with_delete_old_delete_dependency' do
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
       "ON DELETE CASCADE",
       @adapter.add_foreign_key(:employees, :companies, :dependent => :delete)
     )
   end
-  
-  test 'add_with_nullify_dependency' do
-    assert_equal(
-      "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
-      "ON DELETE SET NULL",
-      @adapter.add_foreign_key(:employees, :companies, :dependent => :nullify)
-    )
-  end
-  
-  test 'add_with_restrict_dependency' do
+
+  test 'add_with_restrict_delete_dependency' do
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
       "ON DELETE RESTRICT",
-      @adapter.add_foreign_key(:employees, :companies, :dependent => :restrict)
+      @adapter.add_foreign_key(:employees, :companies, :delete_dependent => :restrict)
+    )
+  end
+
+  test 'add_with_restrict_both_dependency' do
+    assert_equal(
+      "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
+      "ON UPDATE CASCADE " +
+      "ON DELETE RESTRICT",
+      @adapter.add_foreign_key(:employees, :companies, :update_dependent => :update, :delete_dependent => :restrict)
     )
   end
 

@@ -40,7 +40,7 @@ You should add a foreign key in your migration:
 
 The :dependent option can be moved from the has_many definition to the foreign key:
 
-  add_foreign_key(:comments, :posts, dependent: :delete)
+  add_foreign_key(:comments, :posts, delete_dependent: :delete)
 
 If the column is named article_id instead of post_id, use the :column option:
 
