@@ -1,5 +1,5 @@
 # Foreigner
-{<img src="https://secure.travis-ci.org/matthuhiggins/foreigner.png?rvm=1.9.3" />}[http://travis-ci.org/matthuhiggins/foreigner]
+[![Build Status](https://travis-ci.org/matthuhiggins/foreigner.png)](https://travis-ci.org/matthuhiggins/foreigner)
 
 Foreigner introduces a few methods to your migrations for adding and removing foreign key constraints. It also dumps foreign keys to schema.rb.
 
@@ -12,9 +12,9 @@ The following adapters are supported:
 ## Installation
 
 Add the following to your Gemfile:
-
+```ruby
   gem 'foreigner'
-
+```
 ## API Examples
 
 Foreigner adds two methods to migrations.
@@ -82,8 +82,8 @@ Database specific options will never be supported by foreigner. You can add them
 ```
 ## Foreigner Add-ons
 
-* {immigrant}[https://github.com/jenseng/immigrant] - generate a migration that includes all missing foreign keys.
-* {sqlserver-foreigner}[https://github.com/cleblanc87/sqlserver-foreigner] - A plugin for SQL Server.
+* [immigrant](https://github.com/jenseng/immigrant) - generate a migration that includes all missing foreign keys.
+* [sqlserver-foreigner](https://github.com/cleblanc87/sqlserver-foreigner) - A plugin for SQL Server.
 
 ## License
 
