@@ -1,4 +1,5 @@
 require 'active_support/all'
+require 'active_record'
 
 module Foreigner
   extend ActiveSupport::Autoload

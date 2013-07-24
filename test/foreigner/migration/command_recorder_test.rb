@@ -5,36 +5,47 @@ ActiveRecord::Migration::CommandRecorder.class_eval do
 end
 
 class Foreigner::CommandRecorderTest < Foreigner::UnitTest
-  def setup
+  setup do
     @recorder = ActiveRecord::Migration::CommandRecorder.new
   end
 
   test 'invert_add_foreign_key' do
-    @recorder.add_foreign_key(:employees, :companies)
-    remove = @recorder.inverse.first
-    assert_equal [:remove_foreign_key, [:employees, :companies]], remove
+    @recorder.revert do
+      @recorder.add_foreign_key(:employees, :companies)
+    end
+
+    assert_equal [
+      [:remove_foreign_key, [:employees, :companies]]
+    ], @recorder.commands
   end
 
   test 'invert_add_foreign_key with column' do
-    @recorder.add_foreign_key(:employees, :companies, :column => :place_id)
-    remove = @recorder.inverse.first
-    assert_equal [:remove_foreign_key, [:employees, {:column => :place_id}]], remove
+    @recorder.revert do
+      @recorder.add_foreign_key(:employees, :companies, :column => :place_id)
+    end
+
+    assert_equal [
+      [:remove_foreign_key, [:employees, {:column => :place_id}]]
+    ], @recorder.commands
   end
 
   test 'invert_add_foreign_key with name' do
-    @recorder.add_foreign_key(:employees, :companies, :name => 'the_best_fk', :column => :place_id)
-    remove = @recorder.inverse.first
-    assert_equal [:remove_foreign_key, [:employees, {:name => 'the_best_fk'}]], remove
-    
-    @recorder.record :rename_table, [:old, :new]
-    rename = @recorder.inverse.first
-    assert_equal [:rename_table, [:new, :old]], rename
+    @recorder.revert do
+      @recorder.add_foreign_key(:employees, :companies, :name => 'the_best_fk', :column => :place_id)
+    end
+
+    assert_equal [
+      [:remove_foreign_key, [:employees, {:name => 'the_best_fk'}]]
+    ], @recorder.commands
   end
 
   test 'remove_foreign_key is irreversible' do
-    @recorder.remove_foreign_key(:employees, :companies)
     assert_raise ActiveRecord::IrreversibleMigration do
-      @recorder.inverse
+      @recorder.revert do
+        @recorder.remove_foreign_key(:employees, :companies)
+      end
     end
+      # @recorder.inverse
+    # end
   end
 end

@@ -1,9 +1,9 @@
 require 'bundler/setup'
-Bundler.require(:default)
+Bundler.require :default, :test
 
-require 'test/unit'
-require 'active_record'
-require 'mocha'
+require 'active_support/test_case'
+require 'minitest/autorun'
+require 'mocha/setup'
 
 # Foreigner::Adapter.registered.values.each do |file_name|
 #   require file_name
@@ -14,7 +14,7 @@ module TestAdapterMethods
     sql_statements << sql
     sql
   end
-  
+
   def quote_table_name(name)
     quote_column_name(name).gsub('.', '`.`')
   end
@@ -27,7 +27,7 @@ module TestAdapterMethods
     @sql_statements ||= []
   end
 
-  def drop_table(name, options = {})  
+  def drop_table(name, options = {})
   end
 
   def disable_referential_integrity
