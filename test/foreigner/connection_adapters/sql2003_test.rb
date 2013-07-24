@@ -26,49 +26,49 @@ class Foreigner::Sql2003Test < Foreigner::UnitTest
       @adapter.add_foreign_key(:employees, :companies)
     )
   end
-  
+
   test 'add_with_name' do
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `favorite_company_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id)",
-      @adapter.add_foreign_key(:employees, :companies, :name => 'favorite_company_fk')
+      @adapter.add_foreign_key(:employees, :companies, name: 'favorite_company_fk')
     )
   end
-  
+
   test 'add_with_column' do
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `employees_last_employer_id_fk` FOREIGN KEY (`last_employer_id`) REFERENCES `companies`(id)",
-      @adapter.add_foreign_key(:employees, :companies, :column => 'last_employer_id')
-    ) 
+      @adapter.add_foreign_key(:employees, :companies, column: 'last_employer_id')
+    )
   end
-  
+
   test 'add_with_column_and_name' do
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `favorite_company_fk` FOREIGN KEY (`last_employer_id`) REFERENCES `companies`(id)",
-      @adapter.add_foreign_key(:employees, :companies, :column => 'last_employer_id', :name => 'favorite_company_fk')
+      @adapter.add_foreign_key(:employees, :companies, column: 'last_employer_id', name: 'favorite_company_fk')
     )
   end
-  
+
   test 'add_with_delete_dependency' do
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
       "ON DELETE CASCADE",
-      @adapter.add_foreign_key(:employees, :companies, :dependent => :delete)
+      @adapter.add_foreign_key(:employees, :companies, dependent: :delete)
     )
   end
-  
+
   test 'add_with_nullify_dependency' do
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
       "ON DELETE SET NULL",
-      @adapter.add_foreign_key(:employees, :companies, :dependent => :nullify)
+      @adapter.add_foreign_key(:employees, :companies, dependent: :nullify)
     )
   end
-  
+
   test 'add_with_restrict_dependency' do
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
       "ON DELETE RESTRICT",
-      @adapter.add_foreign_key(:employees, :companies, :dependent => :restrict)
+      @adapter.add_foreign_key(:employees, :companies, dependent: :restrict)
     )
   end
 
@@ -76,28 +76,28 @@ class Foreigner::Sql2003Test < Foreigner::UnitTest
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
       "on delete foo",
-      @adapter.add_foreign_key(:employees, :companies, :options => 'on delete foo')
+      @adapter.add_foreign_key(:employees, :companies, options: 'on delete foo')
     )
   end
-  
+
   test 'remove_by_table' do
     assert_equal(
       "ALTER TABLE `suppliers` DROP CONSTRAINT `suppliers_company_id_fk`",
       @adapter.remove_foreign_key(:suppliers, :companies)
     )
   end
-  
+
   test 'remove_by_name' do
     assert_equal(
       "ALTER TABLE `suppliers` DROP CONSTRAINT `belongs_to_supplier`",
-      @adapter.remove_foreign_key(:suppliers, :name => "belongs_to_supplier")
+      @adapter.remove_foreign_key(:suppliers, name: "belongs_to_supplier")
     )
   end
-  
+
   test 'remove_by_column' do
     assert_equal(
       "ALTER TABLE `suppliers` DROP CONSTRAINT `suppliers_ship_to_id_fk`",
-      @adapter.remove_foreign_key(:suppliers, :column => "ship_to_id")
+      @adapter.remove_foreign_key(:suppliers, column: "ship_to_id")
     )
   end
 end

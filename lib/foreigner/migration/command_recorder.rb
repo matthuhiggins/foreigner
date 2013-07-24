@@ -14,9 +14,9 @@ module Foreigner
         add_options ||= {}
 
         if add_options[:name]
-          options = {:name => add_options[:name]}
+          options = {name: add_options[:name]}
         elsif add_options[:column]
-          options = {:column => add_options[:column]}
+          options = {column: add_options[:column]}
         else
           options = to_table
         end

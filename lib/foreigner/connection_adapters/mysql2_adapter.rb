@@ -12,7 +12,7 @@ module Foreigner
 
         "DROP FOREIGN KEY #{quote_column_name(foreign_key_name)}"
       end
-      
+
       def foreign_keys(table_name)
         fk_info = select_all %{
           SELECT fk.referenced_table_name as 'to_table'
@@ -28,7 +28,7 @@ module Foreigner
         create_table_info = select_one("SHOW CREATE TABLE #{quote_table_name(table_name)}")["Create Table"]
 
         fk_info.map do |row|
-          options = {:column => row['column'], :name => row['name'], :primary_key => row['primary_key']}
+          options = {column: row['column'], name: row['name'], primary_key: row['primary_key']}
 
           if create_table_info =~ /CONSTRAINT #{quote_column_name(row['name'])} FOREIGN KEY .* REFERENCES .* ON DELETE (CASCADE|SET NULL|RESTRICT)/
             options[:dependent] = case $1

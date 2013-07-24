@@ -21,21 +21,21 @@ class Foreigner::CommandRecorderTest < Foreigner::UnitTest
 
   test 'invert_add_foreign_key with column' do
     @recorder.revert do
-      @recorder.add_foreign_key(:employees, :companies, :column => :place_id)
+      @recorder.add_foreign_key(:employees, :companies, column: :place_id)
     end
 
     assert_equal [
-      [:remove_foreign_key, [:employees, {:column => :place_id}]]
+      [:remove_foreign_key, [:employees, {column: :place_id}]]
     ], @recorder.commands
   end
 
   test 'invert_add_foreign_key with name' do
     @recorder.revert do
-      @recorder.add_foreign_key(:employees, :companies, :name => 'the_best_fk', :column => :place_id)
+      @recorder.add_foreign_key(:employees, :companies, name: 'the_best_fk', column: :place_id)
     end
 
     assert_equal [
-      [:remove_foreign_key, [:employees, {:name => 'the_best_fk'}]]
+      [:remove_foreign_key, [:employees, {name: 'the_best_fk'}]]
     ], @recorder.commands
   end
 

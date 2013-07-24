@@ -17,18 +17,18 @@ class Foreigner::Mysql2AdapterTest < Foreigner::UnitTest
       @adapter.remove_foreign_key_sql(:suppliers, :companies)
     )
   end
-  
+
   test 'remove_foreign_key_sql by name' do
     assert_equal(
       "DROP FOREIGN KEY `belongs_to_supplier`",
-      @adapter.remove_foreign_key_sql(:suppliers, :name => "belongs_to_supplier")
+      @adapter.remove_foreign_key_sql(:suppliers, name: "belongs_to_supplier")
     )
   end
-  
+
   test 'remove_foreign_key_sql by column' do
     assert_equal(
       "DROP FOREIGN KEY `suppliers_ship_to_id_fk`",
-      @adapter.remove_foreign_key_sql(:suppliers, :column => "ship_to_id")
+      @adapter.remove_foreign_key_sql(:suppliers, column: "ship_to_id")
     )
   end
 end

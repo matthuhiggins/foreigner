@@ -17,9 +17,9 @@ module Foreigner
             AND t3.nspname = ANY (current_schemas(false))
           ORDER BY c.conname
         }
-        
+
         fk_info.map do |row|
-          options = {:column => row['column'], :name => row['name'], :primary_key => row['primary_key']}
+          options = {column: row['column'], name: row['name'], primary_key: row['primary_key']}
 
           options[:dependent] = case row['dependency']
             when 'c' then :delete

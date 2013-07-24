@@ -6,7 +6,7 @@ require 'rake'
 # end
 
 desc 'Default: run unit tests.'
-task :default => :test
+task default: :test
 
 require 'rake/testtask'
 desc 'Test the foreigner plugin.'
