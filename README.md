@@ -1,7 +1,7 @@
 # Foreigner
 [![Build Status](https://travis-ci.org/matthuhiggins/foreigner.png)](https://travis-ci.org/matthuhiggins/foreigner) [![Code Climate](https://codeclimate.com/github/matthuhiggins/foreigner.png)](https://codeclimate.com/github/matthuhiggins/foreigner)
 
-Foreigner introduces a few methods to your migrations for adding and removing foreign key constraints. It also dumps foreign keys to schema.rb.
+Foreigner introduces a few methods to your migrations for adding and removing foreign key constraints. It also dumps foreign keys to `schema.rb`.
 
 The following adapters are supported:
 
@@ -19,10 +19,10 @@ Add the following to your Gemfile:
 
 Foreigner adds two methods to migrations.
 
-* add_foreign_key(from_table, to_table, options)
-* remove_foreign_key(from_table, options)
+* `add_foreign_key(from_table, to_table, options)`
+* `remove_foreign_key(from_table, options)`
 
-(Options are documented in connection_adapters/abstract/schema_definitions.rb):
+(Options are documented in `connection_adapters/abstract/schema_definitions.rb`):
 
 For example, given the following model:
 ```ruby
@@ -38,11 +38,11 @@ You should add a foreign key in your migration:
 ```ruby
   add_foreign_key(:comments, :posts)
 ```
-The :dependent option can be moved from the has_many definition to the foreign key:
+The `:dependent` option can be moved from the `has_many` definition to the foreign key:
 ```ruby
   add_foreign_key(:comments, :posts, dependent: :delete)
 ```
-If the column is named article_id instead of post_id, use the :column option:
+If the column is named `article_id` instead of `post_id`, use the `:column` option:
 ```ruby
   add_foreign_key(:comments, :posts, column: 'article_id')
 ```
@@ -52,7 +52,7 @@ A name can be specified for the foreign key constraint:
 ```
 ## Change Table Methods
 
-Foreigner adds extra methods to create_table and change_table.
+Foreigner adds extra methods to `create_table` and `change_table`.
 
 Create a new table with a foreign key:
 ```ruby
@@ -74,9 +74,9 @@ Remove an unwanted foreign key:
     t.remove_foreign_key :users
   end
 ```
-## Database specific options
+## Database-specific options
 
-Database specific options will never be supported by foreigner. You can add them using :options:
+Database-specific options will never be supported by foreigner. You can add them using `:options`:
 ```ruby
   add_foreign_key(:comments, :posts, options: 'ON UPDATE DEFERRED')
 ```
