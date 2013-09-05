@@ -50,6 +50,10 @@ A name can be specified for the foreign key constraint:
 ```ruby
   add_foreign_key(:comments, :posts, name: 'comment_article_foreign_key')
 ```
+The `:column` and `:name` options create a foreign key with a custom name. In order to remove it you need to specify `:name`:
+```ruby
+  remove_foreign_key(:comments, name: 'comment_article_foreign_key')
+```
 ## Change Table Methods
 
 Foreigner adds extra methods to `create_table` and `change_table`.
