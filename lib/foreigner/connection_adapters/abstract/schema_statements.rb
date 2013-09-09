@@ -7,7 +7,7 @@ module Foreigner
         end
       end
     end
-    
+
     module AbstractAdapter
       def create_table(table_name, *args, &block)
         definition = nil
@@ -26,6 +26,20 @@ module Foreigner
         false
       end
 
+      # Checks to see if a foreign key exists on a table for a given constraint.
+      #
+      #   # Check a foreign key exists
+      #   foreign_key_exists?(:suppliers, :companies)
+      #
+      #   # Check a foreign key with a custom name exists
+      #   foreign_key_exists?(:suppliers, name: "fk_company_id"
+      #
+      #   # Check a foreign key on a column
+      #   foreign_key_exists?(:suppliers, column: "company_id"
+      #
+      def foreign_key_exists?(table_name, column_name, options = {})
+      end
+
       # Adds a new foreign key to the +from_table+, referencing the primary key of +to_table+
       #
       # The foreign key will be named after the from and to tables unless you pass
@@ -37,20 +51,20 @@ module Foreigner
       # generates
       #  ALTER TABLE `comments` ADD CONSTRAINT
       #     `comments_post_id_fk` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`)
-      # 
+      #
       # ====== Creating a named foreign key
       #  add_foreign_key(:comments, :posts, name: 'comments_belongs_to_posts')
       # generates
       #  ALTER TABLE `comments` ADD CONSTRAINT
       #     `comments_belongs_to_posts` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`)
-      # 
+      #
       # ====== Creating a cascading foreign_key on a custom column
       #  add_foreign_key(:people, :people, column: 'best_friend_id', dependent: :nullify)
       # generates
       #  ALTER TABLE `people` ADD CONSTRAINT
       #     `people_best_friend_id_fk` FOREIGN KEY (`best_friend_id`) REFERENCES `people` (`id`)
       #     ON DELETE SET NULL
-      # 
+      #
       # === Supported options
       # [:column]
       #   Specify the column name on the from_table that references the to_table. By default this is guessed

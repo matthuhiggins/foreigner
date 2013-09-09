@@ -20,6 +20,18 @@ class Foreigner::Sql2003Test < Foreigner::UnitTest
     assert @adapter.instance_variable_get(:@disable_referential_integrity)
   end
 
+  test 'foreign_key_exists' do
+    @adapter.expects(:foreign_keys).with(:mommas).at_least_once.returns [Foreigner::ConnectionAdapters::ForeignKeyDefinition.new(:mommas, :babies, name: 'mommas_baby_id_fk')]
+
+    assert @adapter.foreign_key_exists?(:mommas, :babies)
+    assert @adapter.foreign_key_exists?(:mommas, name: 'mommas_baby_id_fk')
+    assert @adapter.foreign_key_exists?(:mommas, column: 'baby_id')
+
+    refute @adapter.foreign_key_exists?(:mommas, name: 'mommas_foo_id')
+    refute @adapter.foreign_key_exists?(:mommas, column: 'son_id')
+    refute @adapter.foreign_key_exists?(:mommas, :houses)
+  end
+
   test 'add_without_options' do
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id)",

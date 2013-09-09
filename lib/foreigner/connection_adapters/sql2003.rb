@@ -14,6 +14,12 @@ module Foreigner
         end
       end
 
+      def foreign_key_exists?(from_table, options)
+        foreign_key_name = decipher_foreign_key_name(from_table, options)
+
+        foreign_keys(from_table).any? { |fk| fk.name == foreign_key_name }
+      end
+
       def add_foreign_key(from_table, to_table, options = {})
         sql = "ALTER TABLE #{quote_table_name(from_table)} #{add_foreign_key_sql(from_table, to_table, options)}"
         execute(sql)
@@ -21,7 +27,7 @@ module Foreigner
 
       def add_foreign_key_sql(from_table, to_table, options = {})
         column  = options[:column] || "#{to_table.to_s.singularize}_id"
-        foreign_key_name = foreign_key_name(from_table, column, options)
+        foreign_key_name = options.key?(:name) ? options[:name].to_s : foreign_key_name(from_table, column)
         primary_key = options[:primary_key] || "id"
         dependency = dependency_sql(options[:dependent])
 
@@ -40,21 +46,24 @@ module Foreigner
       end
 
       def remove_foreign_key_sql(table, options)
-        if Hash === options
-          foreign_key_name = foreign_key_name(table, options[:column], options)
-        else
-          foreign_key_name = foreign_key_name(table, "#{options.to_s.singularize}_id")
-        end
-
+        foreign_key_name = decipher_foreign_key_name(table, options)
         "DROP CONSTRAINT #{quote_column_name(foreign_key_name)}"
       end
 
       private
-        def foreign_key_name(table, column, options = {})
-          if options[:name]
-            options[:name]
+        def foreign_key_name(from_table, column)
+          "#{from_table}_#{column}_fk"
+        end
+
+        def foreign_key_column(to_table)
+          "#{to_table.to_s.singularize}_id"
+        end
+
+        def decipher_foreign_key_name(from_table, options)
+          if Hash === options
+            options.key?(:name) ? options[:name].to_s : foreign_key_name(from_table, options[:column])
           else
-            "#{table}_#{column}_fk"
+            foreign_key_name(from_table, foreign_key_column(options))
           end
         end
 

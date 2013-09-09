@@ -4,11 +4,7 @@ module Foreigner
       include Foreigner::ConnectionAdapters::Sql2003
 
       def remove_foreign_key_sql(table, options)
-        if Hash === options
-          foreign_key_name = foreign_key_name(table, options[:column], options)
-        else
-          foreign_key_name = foreign_key_name(table, "#{options.to_s.singularize}_id")
-        end
+        foreign_key_name = decipher_foreign_key_name(table, options)
 
         "DROP FOREIGN KEY #{quote_column_name(foreign_key_name)}"
       end
