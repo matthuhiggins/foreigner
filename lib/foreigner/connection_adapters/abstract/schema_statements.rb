@@ -37,7 +37,7 @@ module Foreigner
       #   # Check a foreign key on a column
       #   foreign_key_exists?(:suppliers, column: "company_id"
       #
-      def foreign_key_exists?(table_name, column_name, options = {})
+      def foreign_key_exists?(table_name, options)
       end
 
       # Adds a new foreign key to the +from_table+, referencing the primary key of +to_table+
