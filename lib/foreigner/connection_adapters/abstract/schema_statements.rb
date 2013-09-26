@@ -32,10 +32,10 @@ module Foreigner
       #   foreign_key_exists?(:suppliers, :companies)
       #
       #   # Check a foreign key with a custom name exists
-      #   foreign_key_exists?(:suppliers, name: "fk_company_id"
+      #   foreign_key_exists?(:suppliers, name: "fk_company_id")
       #
       #   # Check a foreign key on a column
-      #   foreign_key_exists?(:suppliers, column: "company_id"
+      #   foreign_key_exists?(:suppliers, column: "company_id")
       #
       def foreign_key_exists?(table_name, options)
       end
