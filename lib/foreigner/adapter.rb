@@ -20,6 +20,15 @@ module Foreigner
       def configured_name
         @configured_name ||= ActiveRecord::Base.connection_pool.spec.config[:adapter]
       end
+
+      def safe_include(adapter_class_name, foreigner_module)
+        ActiveRecord::ConnectionAdapters.const_get(adapter_class_name).class_eval do
+          unless ancestors.include? foreigner_module
+            include foreigner_module
+          end
+        end
+      rescue
+      end
     end
   end
 end

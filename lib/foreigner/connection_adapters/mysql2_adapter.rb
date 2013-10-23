@@ -40,13 +40,5 @@ module Foreigner
   end
 end
 
-[:JdbcAdapter, :Mysql2Adapter].each do |adapter|
-  begin
-    ActiveRecord::ConnectionAdapters.const_get(adapter).class_eval do
-      unless ancestors.include? Foreigner::ConnectionAdapters::Mysql2Adapter
-        include Foreigner::ConnectionAdapters::Mysql2Adapter
-      end
-    end
-  rescue
-  end
-end
+Foreigner::Adapter.safe_include :JdbcAdapter, Foreigner::ConnectionAdapters::Mysql2Adapter
+Foreigner::Adapter.safe_include :Mysql2Adapter, Foreigner::ConnectionAdapters::Mysql2Adapter
