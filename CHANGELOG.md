@@ -1,3 +1,7 @@
+### 1.6.0 ###
+
+*   Fix support for latest version of the ```activerecord-jdbc-adapter``` gem.
+
 ### 1.5.0 ###
 
 *   Add `foreign_key_exists?(table_name, options)`, to mirror the new Rails 4.0 method, ```index_exists?```.
