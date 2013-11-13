@@ -31,14 +31,24 @@ module Foreigner
         primary_key = options[:primary_key] || "id"
         dependency = dependency_sql(options[:dependent])
 
+        proper_name = proper_table_name(to_table)
+
         sql =
           "ADD CONSTRAINT #{quote_column_name(foreign_key_name)} " +
           "FOREIGN KEY (#{quote_column_name(column)}) " +
-          "REFERENCES #{quote_table_name(ActiveRecord::Migrator.proper_table_name(to_table))}(#{primary_key})"
+          "REFERENCES #{quote_table_name(proper_name)}(#{primary_key})"
         sql << " #{dependency}" if dependency.present?
         sql << " #{options[:options]}" if options[:options]
 
         sql
+      end
+
+      def proper_table_name(to_table)
+        if ActiveRecord::Migration.instance_methods(false).include? :proper_table_name
+          ActiveRecord::Migration.new.proper_table_name(to_table)
+        else
+          ActiveRecord::Migrator.proper_table_name(to_table)
+        end
       end
 
       def remove_foreign_key(table, options)
