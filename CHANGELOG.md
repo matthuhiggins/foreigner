@@ -1,3 +1,7 @@
+### 1.6.1 ###
+
+*   Fix Rails 4.1 deprecation warning caused by use ```ActiveRecord::Migrator.proper_table_name```. (Thanks @ffmike)
+
 ### 1.6.0 ###
 
 *   Fix support for latest version of the ```activerecord-jdbc-adapter``` gem.
