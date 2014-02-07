@@ -60,6 +60,13 @@ class Foreigner::Sql2003Test < Foreigner::UnitTest
     )
   end
 
+  test 'add_with_multiple_columns_and_keys' do
+    assert_equal(
+      "ALTER TABLE `employees` ADD CONSTRAINT `employees_bar_id_foo_id_fk` FOREIGN KEY (`bar_id`, `foo_id`) REFERENCES `companies`(id_one, id_two)",
+      @adapter.add_foreign_key(:employees, :companies, column: %w(bar_id foo_id), primary_key: %w(id_one id_two))
+    )
+  end
+
   test 'add_with_delete_dependency' do
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id) " +
