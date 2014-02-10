@@ -16,7 +16,6 @@ module Foreigner
 
       def foreign_key_exists?(from_table, options)
         foreign_key_name = decipher_foreign_key_name(from_table, options)
-
         foreign_keys(from_table).any? { |fk| fk.name == foreign_key_name }
       end
 
@@ -45,14 +44,16 @@ module Foreigner
         quote_table_name(proper_table_name(table))
       end
 
-      def proper_table_name(to_table)
+      def proper_table_name(table)
+        # This will normally be a no-op, but prevents the table from being wrapped twice:
+        table = Foreigner::SchemaDumper::ClassMethods.remove_prefix_and_suffix(table)
         if ActiveRecord::Migration.instance_methods(false).include? :proper_table_name
-          ActiveRecord::Migration.new.proper_table_name(to_table, options = {
+          ActiveRecord::Migration.new.proper_table_name(table, options = {
             table_name_prefix: ActiveRecord::Base.table_name_prefix,
             table_name_suffix: ActiveRecord::Base.table_name_suffix
           })
         else
-          ActiveRecord::Migrator.proper_table_name(to_table)
+          ActiveRecord::Migrator.proper_table_name(table)
         end
       end
 
