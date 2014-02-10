@@ -47,10 +47,7 @@ module Foreigner
 
       def proper_table_name(to_table)
         if ActiveRecord::Migration.instance_methods(false).include? :proper_table_name
-          ActiveRecord::Migration.new.proper_table_name(to_table, options = {
-            table_name_prefix: ActiveRecord::Base.table_name_prefix,
-            table_name_suffix: ActiveRecord::Base.table_name_suffix
-          })
+          ActiveRecord::Migration.new.proper_table_name(to_table)
         else
           ActiveRecord::Migrator.proper_table_name(to_table)
         end
