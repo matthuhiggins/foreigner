@@ -48,4 +48,4 @@ class Foreigner::CommandRecorderTest < Foreigner::UnitTest
       # @recorder.inverse
     # end
   end
-end
+end if ActiveRecord::VERSION::MAJOR > 3
