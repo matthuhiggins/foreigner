@@ -2,6 +2,7 @@ require 'helper'
 
 class Foreigner::MysqlAdapterTest < Foreigner::UnitTest
   test 'warning' do
+    skip unless respond_to?(:capture) # < not available until 3.1.x
     output = capture(:stdout) do
       require 'foreigner/connection_adapters/mysql_adapter'
     end

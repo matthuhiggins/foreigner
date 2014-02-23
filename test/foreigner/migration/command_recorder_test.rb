@@ -1,7 +1,9 @@
 require 'helper'
 
-ActiveRecord::Migration::CommandRecorder.class_eval do
-  include ::Foreigner::Migration::CommandRecorder
+if defined?(ActiveRecord::Migration::CommandRecorder)
+  ActiveRecord::Migration::CommandRecorder.class_eval do
+    include ::Foreigner::Migration::CommandRecorder
+  end
 end
 
 class Foreigner::CommandRecorderTest < Foreigner::UnitTest
