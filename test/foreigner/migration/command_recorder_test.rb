@@ -5,7 +5,14 @@ ActiveRecord::Migration::CommandRecorder.class_eval do
 end
 
 class Foreigner::CommandRecorderTest < Foreigner::UnitTest
+
+  def revert_exists?
+    defined?(ActiveRecord::Migration::CommandRecorder) &&
+      ActiveRecord::Migration::CommandRecorder.instance_methods.include?(:revert)
+  end
+
   setup do
+    skip unless revert_exists?
     @recorder = ActiveRecord::Migration::CommandRecorder.new
   end
 
@@ -48,4 +55,4 @@ class Foreigner::CommandRecorderTest < Foreigner::UnitTest
       # @recorder.inverse
     # end
   end
-end if defined?(ActiveRecord::Migration::CommandRecorder)
+end
