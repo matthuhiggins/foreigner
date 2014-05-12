@@ -8,9 +8,9 @@ module Foreigner
       def drop_table(*args)
         options = args.extract_options!
         if options[:force]
-          disable_referential_integrity { super }
+          disable_referential_integrity { super(*(args.dup << options)) }
         else
-          super
+          super(*(args.dup << options))
         end
       end
 
