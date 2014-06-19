@@ -6,7 +6,7 @@ module Foreigner
       def remove_foreign_key_sql(table, options)
         foreign_key_name = decipher_foreign_key_name(table, options)
 
-        "DROP FOREIGN KEY #{quote_column_name(foreign_key_name)}"
+        "DROP FOREIGN KEY #{quote_column_names(foreign_key_name)}"
       end
 
       def foreign_keys(table_name)
@@ -26,7 +26,7 @@ module Foreigner
         fk_info.map do |row|
           options = {column: row['column'], name: row['name'], primary_key: row['primary_key']}
 
-          if create_table_info =~ /CONSTRAINT #{quote_column_name(row['name'])} FOREIGN KEY .* REFERENCES .* ON DELETE (CASCADE|SET NULL|RESTRICT)/
+          if create_table_info =~ /CONSTRAINT #{quote_column_names(row['name'])} FOREIGN KEY .* REFERENCES .* ON DELETE (CASCADE|SET NULL|RESTRICT)/
             options[:dependent] = case $1
               when 'CASCADE'  then :delete
               when 'SET NULL' then :nullify

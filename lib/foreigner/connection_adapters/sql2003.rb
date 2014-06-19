@@ -26,17 +26,19 @@ module Foreigner
       end
 
       def add_foreign_key_sql(from_table, to_table, options = {})
-        column  = options[:column] || "#{to_table.to_s.singularize}_id"
+        column           = options[:column] || "#{to_table.to_s.singularize}_id"
         foreign_key_name = options.key?(:name) ? options[:name].to_s : foreign_key_name(from_table, column)
-        primary_key = options[:primary_key] || "id"
-        dependency = dependency_sql(options[:dependent])
+        primary_key      = options[:primary_key] || "id"
+        primary_keys     = Array(primary_key).join(", ")
+        dependency       = dependency_sql(options[:dependent])
 
         proper_name = proper_table_name(to_table)
 
+
         sql =
-          "ADD CONSTRAINT #{quote_column_name(foreign_key_name)} " +
-          "FOREIGN KEY (#{quote_column_name(column)}) " +
-          "REFERENCES #{quote_table_name(proper_name)}(#{primary_key})"
+          "ADD CONSTRAINT #{quote_column_names(foreign_key_name)} " +
+          "FOREIGN KEY (#{quote_column_names(column)}) " +
+          "REFERENCES #{quote_table_name(proper_name)}(#{primary_keys})"
         sql << " #{dependency}" if dependency.present?
         sql << " #{options[:options]}" if options[:options]
 
@@ -57,12 +59,13 @@ module Foreigner
 
       def remove_foreign_key_sql(table, options)
         foreign_key_name = decipher_foreign_key_name(table, options)
-        "DROP CONSTRAINT #{quote_column_name(foreign_key_name)}"
+        "DROP CONSTRAINT #{quote_column_names(foreign_key_name)}"
       end
 
       private
         def foreign_key_name(from_table, column)
-          "#{from_table}_#{column}_fk"
+          columns_string = Array(column).join("_")
+          "#{from_table}_#{columns_string}_fk"
         end
 
         def foreign_key_column(to_table)
@@ -84,6 +87,11 @@ module Foreigner
             when :restrict then "ON DELETE RESTRICT"
             else ""
           end
+        end
+
+        def quote_column_names(name_or_names)
+          names = Array(name_or_names)
+          names.map(&method(:quote_column_name)).join(", ")
         end
     end
   end
