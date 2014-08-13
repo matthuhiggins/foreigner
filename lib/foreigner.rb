@@ -34,3 +34,4 @@ Foreigner::Adapter.register 'sqlite3', 'foreigner/connection_adapters/noop_adapt
 
 require 'foreigner/loader'
 require 'foreigner/railtie' if defined?(Rails)
+require 'foreigner/standalone_migrations' if defined?(StandaloneMigrations)
