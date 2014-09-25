@@ -10,6 +10,16 @@ class Foreigner::Sql2003Test < Foreigner::UnitTest
     @adapter = TestAdapter.new
   end
 
+  teardown do
+    ActiveRecord::Base.table_name_prefix = ''
+    ActiveRecord::Base.table_name_suffix = ''
+  end
+
+  def add_table_prefix_and_suffix
+    ActiveRecord::Base.table_name_prefix = 'pre_'
+    ActiveRecord::Base.table_name_suffix = '_suff'
+  end
+
   test 'drop_table without force' do
     @adapter.drop_table 'shoes'
     assert !@adapter.instance_variable_get(:@disable_referential_integrity)
@@ -39,6 +49,14 @@ class Foreigner::Sql2003Test < Foreigner::UnitTest
     )
   end
 
+  test 'add_without_options with prefix and suffix' do
+    add_table_prefix_and_suffix
+    assert_equal(
+      "ALTER TABLE `pre_employees_suff` ADD CONSTRAINT `employees_company_id_fk` FOREIGN KEY (`company_id`) REFERENCES `pre_companies_suff`(id)",
+      @adapter.add_foreign_key(:employees, :companies)
+    )
+  end
+
   test 'add_with_name' do
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `favorite_company_fk` FOREIGN KEY (`company_id`) REFERENCES `companies`(id)",
@@ -56,6 +74,14 @@ class Foreigner::Sql2003Test < Foreigner::UnitTest
   test 'add_with_column_and_name' do
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `favorite_company_fk` FOREIGN KEY (`last_employer_id`) REFERENCES `companies`(id)",
+      @adapter.add_foreign_key(:employees, :companies, column: 'last_employer_id', name: 'favorite_company_fk')
+    )
+  end
+
+  test 'add_with_column_and_name with prefix and suffix' do
+    add_table_prefix_and_suffix
+    assert_equal(
+      "ALTER TABLE `pre_employees_suff` ADD CONSTRAINT `favorite_company_fk` FOREIGN KEY (`last_employer_id`) REFERENCES `pre_companies_suff`(id)",
       @adapter.add_foreign_key(:employees, :companies, column: 'last_employer_id', name: 'favorite_company_fk')
     )
   end
@@ -95,6 +121,14 @@ class Foreigner::Sql2003Test < Foreigner::UnitTest
   test 'remove_by_table' do
     assert_equal(
       "ALTER TABLE `suppliers` DROP CONSTRAINT `suppliers_company_id_fk`",
+      @adapter.remove_foreign_key(:suppliers, :companies)
+    )
+  end
+
+  test 'remove_by_table with prefix and suffix' do
+    add_table_prefix_and_suffix
+    assert_equal(
+      "ALTER TABLE `pre_suppliers_suff` DROP CONSTRAINT `suppliers_company_id_fk`",
       @adapter.remove_foreign_key(:suppliers, :companies)
     )
   end
