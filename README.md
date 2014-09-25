@@ -20,7 +20,7 @@ gem 'foreigner'
 Foreigner adds two methods to migrations.
 
 * `add_foreign_key(from_table, to_table, options)`
-* `remove_foreign_key(from_table, options)`
+* `remove_foreign_key(from_table, to_table, options)`
 
 (Options are documented in `connection_adapters/abstract/schema_statements.rb`):
 
