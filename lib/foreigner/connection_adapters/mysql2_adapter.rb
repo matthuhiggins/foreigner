@@ -9,6 +9,15 @@ module Foreigner
         "DROP FOREIGN KEY #{quote_column_name(foreign_key_name)}"
       end
 
+      def add_foreign_key_sql(from_table, to_table, options = {})
+        sql = super(from_table, to_table, options)
+
+        update_depentency = update_dependency_sql(options[:update_dependent] || options[:dependent])
+        sql << " #{update_depentency}" if update_depentency.present?
+
+        sql
+      end
+
       def foreign_keys(table_name)
         fk_info = select_all %{
           SELECT fk.referenced_table_name as 'to_table'
@@ -26,8 +35,13 @@ module Foreigner
         fk_info.map do |row|
           options = {column: row['column'], name: row['name'], primary_key: row['primary_key']}
 
-          if create_table_info =~ /CONSTRAINT #{quote_column_name(row['name'])} FOREIGN KEY .* REFERENCES .* ON DELETE (CASCADE|SET NULL|RESTRICT)/
+          if create_table_info =~ /CONSTRAINT #{quote_column_name(row['name'])} FOREIGN KEY .* REFERENCES .* ON DELETE (CASCADE|SET NULL|RESTRICT) .* ON UPDATE (CASCADE|SET NULL|RESTRICT)/
             options[:dependent] = case $1
+              when 'CASCADE'  then :delete
+              when 'SET NULL' then :nullify
+              when 'RESTRICT' then :restrict
+            end
+            options[:update_dependent] = case $2
               when 'CASCADE'  then :delete
               when 'SET NULL' then :nullify
               when 'RESTRICT' then :restrict
@@ -36,6 +50,16 @@ module Foreigner
           ForeignKeyDefinition.new(table_name, row['to_table'], options)
         end
       end
+
+      def update_dependency_sql(dependency)
+        case dependency
+          when :nullify then "ON UPDATE SET NULL"
+          when :delete  then "ON UPDATE CASCADE"
+          when :restrict then "ON UPDATE RESTRICT"
+          else ""
+        end
+      end
+
     end
   end
 end
