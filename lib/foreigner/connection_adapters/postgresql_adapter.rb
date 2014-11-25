@@ -8,8 +8,16 @@ module Foreigner
       def foreign_keys(table_name)
         fk_info = select_all %{
           SELECT t2.relname AS to_table
-               , a1.attname AS column
-               , a2.attname AS primary_key
+	       , ARRAY(select a1.attname
+			from pg_attribute a1
+			where a1.attnum = ANY(c.conkey)
+			and a1.attrelid = t1.oid
+		  ) AS columns
+	       , ARRAY(select a2.attname 
+		    from pg_attribute a2
+		    where a2.attnum = ANY(c.confkey)
+		    and a2.attrelid = t2.oid
+		  ) AS primary_key
                , c.conname AS name
                , c.confdeltype AS dependency
                , c.confupdtype AS update_dependency
@@ -19,8 +27,6 @@ module Foreigner
           FROM pg_constraint c
           JOIN pg_class t1 ON c.conrelid = t1.oid
           JOIN pg_class t2 ON c.confrelid = t2.oid
-          JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
-          JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
           JOIN pg_namespace t3 ON c.connamespace = t3.oid
           WHERE c.contype = 'f'
             AND t1.relname = '#{table_name}'
@@ -29,7 +35,25 @@ module Foreigner
         }
 
         fk_info.map do |row|
-          options = {column: row['column'], name: row['name'], primary_key: row['primary_key']}
+          options = {name: row['name']}
+
+	  # rails < 4.1 always returns strings, so we need to
+	  # parse out the array values.
+	  if row['columns'].is_a? String
+	    identity = ActiveRecord::ConnectionAdapters::PostgreSQLAdapter::OID::Identity.new 
+	    parser = ActiveRecord::ConnectionAdapters::PostgreSQLAdapter::OID::Array.new identity
+
+	    options[:column] = parser.type_cast row['columns']
+	    options[:primary_key] = parser.type_cast row['primary_key']
+	  else
+	    options[:column] = row['columns']
+	    options[:primary_key] = row['primary_key']
+	  end
+
+	  # To keep the schema dump nice and tidy, convert to just a
+	  # single string if there is only one value
+	  options[:column] = options[:column].first if options[:column].length == 1
+	  options[:primary_key] = options[:primary_key].first if options[:primary_key].length == 1
 
           options[:dependent] = case row['dependency']
             # NO ACTION is the default

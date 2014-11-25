@@ -33,6 +33,10 @@ class Foreigner::SchemaDumperTest < Foreigner::UnitTest
     assert_dump "add_foreign_key \"foos\", \"bars\", name: \"lulz\", dependent: :delete", Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('foos', 'bars', column: 'bar_id', primary_key: 'id', name: 'lulz', dependent: :delete)
     assert_dump "add_foreign_key \"foos\", \"bars\", name: \"lulz\", column: \"mamma_id\"", Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('foos', 'bars', column: 'mamma_id', primary_key: 'id', name: 'lulz')
     assert_dump "add_foreign_key \"foos\", \"bars\", name: \"lulz\", options: \"YOLO MAYBE DB-SPECIFIC!\"", Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('foos', 'bars', column: 'bar_id', primary_key: 'id', name: 'lulz', options: "YOLO MAYBE DB-SPECIFIC!")
+    assert_dump "add_foreign_key \"foos\", \"bars\", name: \"lulz\", column: [\"a_id\", \"b_id\"], primary_key: [\"c_id\", \"d_id\"]",
+    Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('foos',
+    'bars', column: ['a_id', 'b_id'], primary_key: ['c_id', 'd_id'],
+    name: 'lulz')
   end
 
   test 'all tables' do
