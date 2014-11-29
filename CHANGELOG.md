@@ -1,3 +1,8 @@
+### 1.7.0 ###
+
+* Preserve DB specific options in schema.rb dump (PR #148)
+* Preserve table name prefixes and suffixes. (PR #134)
+
 ### 1.6.1 ###
 
 *   Fix Rails 4.1 deprecation warning caused by use ```ActiveRecord::Migrator.proper_table_name```. (Thanks @ffmike)
