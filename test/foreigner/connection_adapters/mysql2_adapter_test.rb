@@ -9,6 +9,45 @@ class Foreigner::Mysql2AdapterTest < Foreigner::UnitTest
 
   setup do
     @adapter = Mysql2Adapter.new
+    @adapter.instance_variable_set(:@config, database: 'foo')
+  end
+
+  test 'foreign_keys parsing' do
+    @adapter.expects(:select_all).at_least_once.returns([
+      {'column' => 'foo_id', 'name' => 'foo_bar_foo_id_fk', 'primary_key' => 'id', 'to_table' => 'foo'}
+    ])
+
+    @adapter.expects(:select_one).returns('Create Table' => "CONSTRAINT `foo_bar_foo_id_fk` FOREIGN KEY (`foo_id`) REFERENCES `foo` (`id`)\n")
+    assert_equal Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('bar', 'foo', {column:"foo_id", name:"foo_bar_foo_id_fk", primary_key:"id", dependent:nil, options:nil}),
+                 @adapter.foreign_keys('bar').first
+
+    @adapter.expects(:select_one).returns('Create Table' => "CONSTRAINT `foo_bar_foo_id_fk` FOREIGN KEY (`foo_id`) REFERENCES `foo` (`id`),\n")
+    assert_equal Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('bar', 'foo', {column:"foo_id", name:"foo_bar_foo_id_fk", primary_key:"id", dependent:nil, options:nil}),
+                 @adapter.foreign_keys('bar').first
+
+    @adapter.expects(:select_one).returns('Create Table' => "CONSTRAINT `foo_bar_foo_id_fk` FOREIGN KEY (`foo_id`) REFERENCES `foo` (`id`) ON DELETE CASCADE\n")
+    assert_equal Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('bar', 'foo', {column:"foo_id", name:"foo_bar_foo_id_fk", primary_key:"id", dependent: :delete, options:nil}),
+                 @adapter.foreign_keys('bar').first
+
+    @adapter.expects(:select_one).returns('Create Table' => "CONSTRAINT `foo_bar_foo_id_fk` FOREIGN KEY (`foo_id`) REFERENCES `foo` (`id`) ON DELETE CASCADE,\n")
+    assert_equal Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('bar', 'foo', {column:"foo_id", name:"foo_bar_foo_id_fk", primary_key:"id", dependent: :delete, options:nil}),
+                 @adapter.foreign_keys('bar').first
+
+    @adapter.expects(:select_one).returns('Create Table' => "CONSTRAINT `foo_bar_foo_id_fk` FOREIGN KEY (`foo_id`) REFERENCES `foo` (`id`) FOO BAR\n")
+    assert_equal Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('bar', 'foo', {column:"foo_id", name:"foo_bar_foo_id_fk", primary_key:"id", dependent:nil, options:'FOO BAR'}),
+                 @adapter.foreign_keys('bar').first
+
+    @adapter.expects(:select_one).returns('Create Table' => "CONSTRAINT `foo_bar_foo_id_fk` FOREIGN KEY (`foo_id`) REFERENCES `foo` (`id`) FOO BAR,\n")
+    assert_equal Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('bar', 'foo', {column:"foo_id", name:"foo_bar_foo_id_fk", primary_key:"id", dependent:nil, options:'FOO BAR'}),
+                 @adapter.foreign_keys('bar').first
+
+    @adapter.expects(:select_one).returns('Create Table' => "CONSTRAINT `foo_bar_foo_id_fk` FOREIGN KEY (`foo_id`) REFERENCES `foo` (`id`) ON DELETE CASCADE FOO BAR,\n")
+    assert_equal Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('bar', 'foo', {column:"foo_id", name:"foo_bar_foo_id_fk", primary_key:"id", dependent: :delete, options:'FOO BAR'}),
+                 @adapter.foreign_keys('bar').first
+
+    @adapter.expects(:select_one).returns('Create Table' => "CONSTRAINT `foo_bar_foo_id_fk` FOREIGN KEY (`foo_id`) REFERENCES `foo` (`id`) ON DELETE CASCADE FOO BAR,\n")
+    assert_equal Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('bar', 'foo', {column:"foo_id", name:"foo_bar_foo_id_fk", primary_key:"id", dependent: :delete, options:'FOO BAR'}),
+                 @adapter.foreign_keys('bar').first
   end
 
   test 'remove_foreign_key_sql by table' do
