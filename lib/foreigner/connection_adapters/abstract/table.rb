@@ -1,10 +1,14 @@
 module Foreigner
-  module ConnectionAdapters    
+  module ConnectionAdapters
     module Table
       extend ActiveSupport::Concern
 
       included do
         alias_method_chain :references, :foreign_keys
+      end
+
+      def table_name
+        @table_name || self.name
       end
 
       # Adds a new foreign key to the table. +to_table+ can be a single Symbol, or
@@ -20,7 +24,7 @@ module Foreigner
       # ====== Defining the column of the +to_table+.
       #  t.foreign_key(:people, column: :sender_id, primary_key: :person_id)
       def foreign_key(to_table, options = {})
-        @base.add_foreign_key(@table_name, to_table, options)
+        @base.add_foreign_key(table_name, to_table, options)
       end
 
       # Remove the given foreign key from the table.
@@ -39,7 +43,7 @@ module Foreigner
       #     t.remove_foreign_key name: :party_foreign_key
       #   end
       def remove_foreign_key(options)
-        @base.remove_foreign_key(@table_name, options)
+        @base.remove_foreign_key(table_name, options)
       end
 
       # Deprecated
