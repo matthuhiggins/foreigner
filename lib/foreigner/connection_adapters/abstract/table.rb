@@ -8,7 +8,11 @@ module Foreigner
       end
 
       def table_name
-        @table_name || self.name
+        if defined?(name)
+          name
+        else
+          @table_name
+        end
       end
 
       # Adds a new foreign key to the table. +to_table+ can be a single Symbol, or
