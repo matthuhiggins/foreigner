@@ -11,7 +11,7 @@ class Foreigner::SchemaDumperTest < Foreigner::UnitTest
   class MockSchemaDumper
     cattr_accessor :ignore_tables
 
-    attr_accessor :processed_tables
+    attr_accessor :processed_tables, :stream
     def initialize
       @connection = MockConnection.new
       @processed_tables = []
@@ -21,6 +21,7 @@ class Foreigner::SchemaDumperTest < Foreigner::UnitTest
     end
 
     def foreign_keys(table, stream)
+      self.stream = stream
       processed_tables << table
     end
 
@@ -47,6 +48,15 @@ class Foreigner::SchemaDumperTest < Foreigner::UnitTest
     dumper = MockSchemaDumper.new
     dumper.tables(StringIO.new)
     assert_equal ['bar'].to_set, dumper.processed_tables.to_set
+  end
+
+  test '4.1.9 loading error' do
+    Foreigner::Helper.stubs(:active_record_version).returns("4.1.9")
+    MockSchemaDumper.ignore_tables = []
+    dumper = MockSchemaDumper.new
+    dumper.tables(StringIO.new)
+
+    assert_match(/Foreigner\.load/, dumper.stream.string)
   end
 
   test 'removes table name suffix and prefix' do
