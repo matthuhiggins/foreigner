@@ -69,6 +69,26 @@ class Foreigner::SchemaDumperTest < Foreigner::UnitTest
     end
   end
 
+  test 'appends "public." to Apartment excluded models' do
+    begin
+      class ::Apartment
+        def self.excluded_models
+          ["Diagnosis"]
+        end
+      end
+      class ::Diagnosis
+        def self.table_name
+          "public.diagnoses"
+        end
+      end
+      assert_dump "add_foreign_key \"send_vet_prescription_items\", \"public.diagnoses\", name: \"send_vet_prescription_items_diagnosis_id_fk\", column: \"diagnosis_id\"",
+        Foreigner::ConnectionAdapters::ForeignKeyDefinition.new('send_vet_prescription_items', 'diagnoses', column: 'diagnosis_id', primary_key: 'id', name: 'send_vet_prescription_items_diagnosis_id_fk')
+    ensure
+      Object.send(:remove_const, :Apartment)
+      Object.send(:remove_const, :Diagnosis)
+    end
+  end
+
   private
     def assert_dump(expected, definition)
       assert_equal expected, MockSchemaDumper.dump_foreign_key(definition)

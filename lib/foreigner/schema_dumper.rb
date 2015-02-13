@@ -9,10 +9,10 @@ module Foreigner
     module ClassMethods
       def dump_foreign_key(foreign_key)
         statement_parts = [ ('add_foreign_key ' + remove_prefix_and_suffix(foreign_key.from_table).inspect) ]
-        statement_parts << remove_prefix_and_suffix(foreign_key.to_table).inspect
+        statement_parts << maybe_prepend_public(remove_prefix_and_suffix(foreign_key.to_table)).inspect
         statement_parts << ('name: ' + foreign_key.options[:name].inspect)
 
-        if foreign_key.options[:column] != "#{remove_prefix_and_suffix(foreign_key.to_table).singularize}_id"
+        if foreign_key.options[:column] != "#{maybe_prepend_public(remove_prefix_and_suffix(foreign_key.to_table)).singularize}_id"
           statement_parts << ('column: ' + foreign_key.options[:column].inspect)
         end
         if foreign_key.options[:primary_key] != 'id'
@@ -38,6 +38,14 @@ module Foreigner
         end
       end
       module_function :remove_prefix_and_suffix
+
+      def maybe_prepend_public(table_name)
+        if Object.const_defined?(:Apartment) && Apartment.excluded_models.map { |m| m.constantize.table_name.gsub /^public\./, '' }.include?(table_name)
+          "public.#{table_name}"
+        else
+          table_name
+        end
+      end
     end
 
     def requires_foreigner_load?
