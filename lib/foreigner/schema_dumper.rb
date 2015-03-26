@@ -45,7 +45,7 @@ module Foreigner
       # Ensure Foreigner to be initialized before running foreign_keys.
       # This is required since schema::load is not initializing the environment
       # anymore in Rails 4.1.9 (https://github.com/rails/rails/commit/5d6bb89f)
-      stream.puts '  Foreigner.load' if Foreigner::Helper.active_record_version == '4.1.9'
+      stream.puts '  Foreigner.load' if (Foreigner::Helper.active_record_version.start_with? '4.1.') && (Foreigner::Helper.active_record_version.split('.')[2].to_i > 8)
       @connection.tables.sort.each do |table|
         next if ['schema_migrations', ignore_tables].flatten.any? do |ignored|
           case ignored
