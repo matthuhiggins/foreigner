@@ -51,7 +51,7 @@ class Foreigner::SchemaDumperTest < Foreigner::UnitTest
   end
 
   test '4.1.9 loading error' do
-    Foreigner::Helper.stubs(:active_record_version).returns("4.1.9")
+    Foreigner::Helper.stubs(:active_record_version).returns Gem::Version.new("4.1.9")
     MockSchemaDumper.ignore_tables = []
     dumper = MockSchemaDumper.new
     dumper.tables(StringIO.new)
