@@ -3,8 +3,8 @@ module Foreigner
     def self.active_record_version
       if ::ActiveRecord.respond_to? :version
         ActiveRecord.version
-      elsif ::ActiveRecord::VERSION
-        Gem::Version.new(::ActiveRecord::VERSION)
+      elsif ::ActiveRecord::VERSION::STRING
+        Gem::Version.new(::ActiveRecord::VERSION::STRING)
       else
         raise "Unknown ActiveRecord Version API"
       end
