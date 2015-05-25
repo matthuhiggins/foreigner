@@ -44,6 +44,14 @@ end
 
 module Foreigner
   class UnitTest < ActiveSupport::TestCase
+    private
+    def with_stdout(stream)
+      oldstdout = $stdout
+      $stdout = stream
+      yield
+    ensure
+      $stdout = oldstdout
+    end
   end
 
   class IntegrationTest < ActiveSupport::TestCase

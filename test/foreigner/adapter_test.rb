@@ -1,6 +1,6 @@
 require 'helper'
 
-class Foreigner::AdapterTest < ActiveSupport::TestCase
+class Foreigner::AdapterTest < Foreigner::UnitTest
   test "load" do
     Foreigner::Adapter.register 'foo', 'bar'
     Foreigner::Adapter.expects(:configured_name).at_least_once.returns('foo')
