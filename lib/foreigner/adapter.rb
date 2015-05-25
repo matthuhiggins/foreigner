@@ -12,8 +12,8 @@ module Foreigner
         if registered.key?(configured_name)
           require registered[configured_name]
         else
-          p "Database adapter #{configured_name} not supported. Use:\n" +
-            "Foreigner::Adapter.register '#{configured_name}', 'path/to/adapter'"
+          puts "Database adapter #{configured_name} not supported. Use:\n" +
+               "Foreigner::Adapter.register '#{configured_name}', 'path/to/adapter'"
         end
       end
 
