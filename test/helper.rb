@@ -42,6 +42,10 @@ module TestAdapterMethods
     end
 end
 
+if ActiveSupport::TestCase.respond_to?(:test_order=)
+  ActiveSupport::TestCase.test_order = :random
+end
+
 module Foreigner
   class UnitTest < ActiveSupport::TestCase
   end
