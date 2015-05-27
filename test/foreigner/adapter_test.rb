@@ -8,4 +8,13 @@ class Foreigner::AdapterTest < Foreigner::UnitTest
 
     Foreigner::Adapter.load!
   end
+
+  test "load prints warning message for an unsupported adapter on two lines" do
+    Foreigner::Adapter.stubs(:configured_name).returns('unsupported')
+
+    output = StringIO.new
+    with_stdout(output) { Foreigner::Adapter.load! }
+
+    assert_equal 2, output.string.split("\n").length
+  end
 end
