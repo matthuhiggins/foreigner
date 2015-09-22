@@ -75,6 +75,9 @@ class Foreigner::SchemaDumperTest < Foreigner::UnitTest
         def self.excluded_models
           ["Diagnosis"]
         end
+        def self.default_schema
+          :public
+        end
       end
       class ::Diagnosis
         def self.table_name
