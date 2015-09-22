@@ -6,6 +6,7 @@ module Foreigner
       DEPENDENCY_CODE_ACTIONS = {'c' => 'CASCADE', 'n' => 'SET NULL', 'r' => 'RESTRICT', 'd' => 'SET DEFAULT'}
 
       def foreign_keys(table_name_with_or_without_schema_name)
+
         table_name, _schema_name, namespace_name = get_db_object_names(table_name_with_or_without_schema_name)
 
         fk_info = select_all %{
@@ -51,7 +52,7 @@ module Foreigner
           extras << 'NOT VALID'                  if row['valid'] == 'f'
           options[:options] = extras.join(" ")
 
-          ForeignKeyDefinition.new(table_name, row['to_table'], options)
+          ForeignKeyDefinition.new(table_name_with_or_without_schema_name, row['to_table'], options)
         end
       end
     end
