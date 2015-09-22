@@ -6,6 +6,9 @@ module Foreigner
       DEPENDENCY_CODE_ACTIONS = {'c' => 'CASCADE', 'n' => 'SET NULL', 'r' => 'RESTRICT', 'd' => 'SET DEFAULT'}
 
       def foreign_keys(table_name)
+        table_name_without_schema = table_name.split('.').last
+        schema_name = table_name.split('.').first
+
         fk_info = select_all %{
           SELECT t2.relname AS to_table
                , a1.attname AS column
@@ -23,8 +26,8 @@ module Foreigner
           JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
           JOIN pg_namespace t3 ON c.connamespace = t3.oid
           WHERE c.contype = 'f'
-            AND t1.relname = '#{table_name}'
-            AND t3.nspname = ANY (current_schemas(false))
+            AND t1.relname = '#{table_name_without_schema}'
+            AND t3.nspname = #{ explicit_schema?(table_name) ? "'"+ schema_name +"'" : "ANY (current_schemas(false))" }
           ORDER BY c.conname
         }
 

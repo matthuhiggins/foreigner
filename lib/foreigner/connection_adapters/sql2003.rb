@@ -20,8 +20,21 @@ module Foreigner
       end
 
       def add_foreign_key(from_table, to_table, options = {})
-        sql = "ALTER TABLE #{quote_proper_table_name(from_table)} #{add_foreign_key_sql(from_table, to_table, options)}"
-        execute(sql)
+        if should_add_foreign_key?(from_table, options)
+          sql = "ALTER TABLE #{quote_proper_table_name(from_table)} #{add_foreign_key_sql(from_table, to_table, options)}"
+          execute(sql)
+        end
+      end
+
+      # We do not add foreign key to public schema, if it already exists.
+      def should_add_foreign_key?(from_table, options)
+        explicit_schema = explicit_schema?(from_table)
+
+        ( explicit_schema && !foreign_key_exists?(from_table, options) ) || !explicit_schema
+      end
+
+      def explicit_schema?(from_table)
+        from_table.is_a?(String) && from_table.include?('.')
       end
 
       def add_foreign_key_sql(from_table, to_table, options = {})
