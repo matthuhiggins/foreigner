@@ -118,6 +118,42 @@ class Foreigner::Sql2003Test < Foreigner::UnitTest
     )
   end
 
+  test 'when apartment, when schema specified, adds foreign key' do
+    begin
+      class ::Apartment
+        def self.default_schema
+          :public
+        end
+      end
+
+      @adapter.expects(:foreign_key_exists?).with('public.roles_users', {}).at_least_once.returns(false)
+      assert_equal(
+        "ALTER TABLE `public`.`roles_users` ADD CONSTRAINT `public.roles_users_role_id_fk` FOREIGN KEY (`public.role_id`) REFERENCES `public`.`roles`(id)",
+        @adapter.add_foreign_key('public.roles_users', 'public.roles')
+      )
+    ensure
+      Object.send(:remove_const, :Apartment)
+    end
+  end
+
+  test 'when schema specified, skips add foreign key if it already exists' do
+    begin
+      class ::Apartment
+        def self.default_schema
+          :public
+        end
+      end
+
+      @adapter.expects(:foreign_key_exists?).with('public.roles_users', {}).at_least_once.returns(true)
+      assert_equal(
+        nil,
+        @adapter.add_foreign_key('public.roles_users', 'public.roles')
+      )
+    ensure
+      Object.send(:remove_const, :Apartment)
+    end
+  end
+
   test 'remove_by_table' do
     assert_equal(
       "ALTER TABLE `suppliers` DROP CONSTRAINT `suppliers_company_id_fk`",

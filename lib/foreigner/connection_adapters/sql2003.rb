@@ -33,7 +33,7 @@ module Foreigner
         return false unless Object.const_defined?(:Apartment)
 
         _table_name, schema_name, _namespace_name = get_db_object_names(from_table)
-        schema_name && schema_name == Apartment.default_schema && foreign_key_exists?(from_table, options)
+        schema_name && schema_name == Apartment.default_schema.to_s && foreign_key_exists?(from_table, options)
       end
 
       def schema_specified?(table_name)
@@ -96,8 +96,9 @@ module Foreigner
       end
 
       private
-        def foreign_key_name(from_table, column)
-          "#{from_table}_#{column}_fk"
+        def foreign_key_name(table_name, column_with_schema_name)
+          column, _schema_name, _namespace_name = get_db_object_names(column_with_schema_name)
+          "#{table_name}_#{column}_fk"
         end
 
         def foreign_key_column(to_table)
