@@ -20,21 +20,37 @@ module Foreigner
       end
 
       def add_foreign_key(from_table, to_table, options = {})
-        if should_add_foreign_key?(from_table, options)
+        unless skip_add_foreign_key?(from_table, options)
           sql = "ALTER TABLE #{quote_proper_table_name(from_table)} #{add_foreign_key_sql(from_table, to_table, options)}"
           execute(sql)
         end
       end
 
-      # We do not add foreign key to public schema, if it already exists.
-      def should_add_foreign_key?(from_table, options)
-        explicit_schema = explicit_schema?(from_table)
+      # Retain original functionality -- do not skip add_foreign_key if Apartment is not even present
+      # Apartment functionality:
+      #  - Skip add_foreign_key if schema name is specified, equal to 'public' schema, and foreign_key already exists
+      def skip_add_foreign_key?(from_table, options)
+        return false unless Object.const_defined?(:Apartment)
 
-        ( explicit_schema && !foreign_key_exists?(from_table, options) ) || !explicit_schema
+        _table_name, schema_name, _namespace_name = get_db_object_names(from_table)
+        schema_name && schema_name == Apartment.default_schema && foreign_key_exists?(from_table, options)
       end
 
-      def explicit_schema?(from_table)
-        from_table.is_a?(String) && from_table.include?('.')
+      def schema_specified?(table_name)
+        table_name.is_a?(String) && table_name.include?('.')
+      end
+
+      # Returns table_name, schema_name and namespace_name
+      #
+      # get_db_object_names('schema_name.table_name') => ['table_name', 'schema_name', "'schema_name'"]
+      # get_db_object_names('table_name')             => ['table_name', nil, ANY (current_schemas(false))']
+      def get_db_object_names(full_name)
+        if schema_specified?(full_name)
+          schema_name, table_name = full_name.split('.')
+          [table_name, schema_name, "'#{schema_name}'"]
+        else
+          [full_name, nil, 'ANY (current_schemas(false))']
+        end
       end
 
       def add_foreign_key_sql(from_table, to_table, options = {})
