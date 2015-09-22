@@ -118,6 +118,23 @@ class Foreigner::Sql2003Test < Foreigner::UnitTest
     )
   end
 
+  test 'when apartment, when schema not specified, adds foreign key' do
+    begin
+      class ::Apartment
+        def self.default_schema
+          :public
+        end
+      end
+
+      assert_equal(
+        "ALTER TABLE `roles_users` ADD CONSTRAINT `roles_users_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles`(id)",
+        @adapter.add_foreign_key('roles_users', 'roles')
+      )
+    ensure
+      Object.send(:remove_const, :Apartment)
+    end
+  end
+
   test 'when apartment, when schema specified, adds foreign key' do
     begin
       class ::Apartment
@@ -136,7 +153,7 @@ class Foreigner::Sql2003Test < Foreigner::UnitTest
     end
   end
 
-  test 'when schema specified, skips add foreign key if it already exists' do
+  test 'when apartment, when schema specified, skips add foreign key if it already exists' do
     begin
       class ::Apartment
         def self.default_schema
