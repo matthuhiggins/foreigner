@@ -8,7 +8,7 @@ module Foreigner
 
     module ClassMethods
       def dump_foreign_key(foreign_key)
-        statement_parts = [ ('add_foreign_key ' + remove_prefix_and_suffix(foreign_key.from_table).inspect) ]
+        statement_parts = [ ('add_foreign_key ' + maybe_prepend_apartment_schema_name(remove_prefix_and_suffix(foreign_key.from_table)).inspect) ]
         statement_parts << maybe_prepend_apartment_schema_name(remove_prefix_and_suffix(foreign_key.to_table)).inspect
         statement_parts << ('name: ' + foreign_key.options[:name].inspect)
 
