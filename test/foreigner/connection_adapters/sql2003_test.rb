@@ -118,11 +118,35 @@ class Foreigner::Sql2003Test < Foreigner::UnitTest
     )
   end
 
-  test 'when apartment, when schema not specified, adds foreign key' do
+  test 'uses correct schema prefixing for foreign keys when schema is specified' do
+    begin
+      assert_equal(
+        "ALTER TABLE `roles_users` ADD CONSTRAINT `roles_users_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles`(id)",
+        @adapter.add_foreign_key('roles_users', 'roles')
+      )
+
+      assert_equal(
+        "ALTER TABLE `roles_users` ADD CONSTRAINT `roles_users_role_id_fk` FOREIGN KEY (`public.role_id`) REFERENCES `public`.`roles`(id)",
+        @adapter.add_foreign_key('roles_users', 'public.roles')
+      )
+
+      assert_equal(
+        "ALTER TABLE `public`.`roles_users` ADD CONSTRAINT `public.roles_users_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles`(id)",
+        @adapter.add_foreign_key('public.roles_users', 'roles')
+      )
+
+      assert_equal(
+        "ALTER TABLE `public`.`roles_users` ADD CONSTRAINT `public.roles_users_role_id_fk` FOREIGN KEY (`public.role_id`) REFERENCES `public`.`roles`(id)",
+        @adapter.add_foreign_key('public.roles_users', 'public.roles')
+      )
+    end
+  end
+
+  test 'when add_foreign_key is used in conjunction with Apartment (and schema is default_schema) it skips adding foreign key' do
     begin
       class ::Apartment
         def self.default_schema
-          :public
+          'public'
         end
       end
 
@@ -130,36 +154,29 @@ class Foreigner::Sql2003Test < Foreigner::UnitTest
         "ALTER TABLE `roles_users` ADD CONSTRAINT `roles_users_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles`(id)",
         @adapter.add_foreign_key('roles_users', 'roles')
       )
-    ensure
-      Object.send(:remove_const, :Apartment)
-    end
-  end
 
-  test 'when apartment, when schema specified, adds foreign key' do
-    begin
-      class ::Apartment
-        def self.default_schema
-          :public
-        end
-      end
+      assert_equal(
+        "ALTER TABLE `roles_users` ADD CONSTRAINT `roles_users_role_id_fk` FOREIGN KEY (`public.role_id`) REFERENCES `public`.`roles`(id)",
+        @adapter.add_foreign_key('roles_users', 'public.roles')
+      )
+
+      @adapter.expects(:foreign_key_exists?).with('public.roles_users', {}).at_least_once.returns(false)
+      assert_equal(
+        "ALTER TABLE `public`.`roles_users` ADD CONSTRAINT `public.roles_users_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles`(id)",
+        @adapter.add_foreign_key('public.roles_users', 'roles')
+      )
 
       @adapter.expects(:foreign_key_exists?).with('public.roles_users', {}).at_least_once.returns(false)
       assert_equal(
         "ALTER TABLE `public`.`roles_users` ADD CONSTRAINT `public.roles_users_role_id_fk` FOREIGN KEY (`public.role_id`) REFERENCES `public`.`roles`(id)",
         @adapter.add_foreign_key('public.roles_users', 'public.roles')
       )
-    ensure
-      Object.send(:remove_const, :Apartment)
-    end
-  end
 
-  test 'when apartment, when schema specified, skips add foreign key if it already exists' do
-    begin
-      class ::Apartment
-        def self.default_schema
-          :public
-        end
-      end
+      @adapter.expects(:foreign_key_exists?).with('public.roles_users', {}).at_least_once.returns(true)
+      assert_equal(
+        nil,
+        @adapter.add_foreign_key('public.roles_users', 'roles')
+      )
 
       @adapter.expects(:foreign_key_exists?).with('public.roles_users', {}).at_least_once.returns(true)
       assert_equal(
