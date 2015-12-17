@@ -1,5 +1,5 @@
 # Foreigner
-[![Build Status](https://travis-ci.org/matthuhiggins/foreigner.png)](https://travis-ci.org/matthuhiggins/foreigner) [![Code Climate](https://codeclimate.com/github/matthuhiggins/foreigner.png)](https://codeclimate.com/github/matthuhiggins/foreigner)
+[![Build Status](https://travis-ci.org/matthuhiggins/foreigner.svg)](https://travis-ci.org/matthuhiggins/foreigner) [![Code Climate](https://codeclimate.com/github/matthuhiggins/foreigner.svg)](https://codeclimate.com/github/matthuhiggins/foreigner)
 
 Foreigner introduces a few methods to your migrations for adding and removing foreign key constraints. It also dumps foreign keys to `schema.rb`.
 
