@@ -9,6 +9,8 @@ The following adapters are supported:
 * postgres
 * sqlite (foreign key methods are a no-op)
 
+**Foreigner was rendered obsolete in Rails 4.2**. The migration DSL [supports foreign keys out of the box](http://edgeguides.rubyonrails.org/4_2_release_notes.html#foreign-key-support) via `add_foreign_key` and `remove_foreign_key`.
+
 ## Installation
 
 Add the following to your Gemfile:
