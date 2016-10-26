@@ -31,6 +31,7 @@ Foreigner::Adapter.register 'postgresql', 'foreigner/connection_adapters/postgre
 Foreigner::Adapter.register 'postgis', 'foreigner/connection_adapters/postgresql_adapter'
 Foreigner::Adapter.register 'jdbcpostgresql', 'foreigner/connection_adapters/postgresql_adapter'
 Foreigner::Adapter.register 'sqlite3', 'foreigner/connection_adapters/noop_adapter'
+Foreigner::Adapter.register 'nulldb', 'foreigner/connection_adapters/noop_adapter'
 
 require 'foreigner/loader'
 require 'foreigner/helper'
