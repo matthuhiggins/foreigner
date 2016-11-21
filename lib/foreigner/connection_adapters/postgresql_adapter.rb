@@ -5,7 +5,10 @@ module Foreigner
 
       DEPENDENCY_CODE_ACTIONS = {'c' => 'CASCADE', 'n' => 'SET NULL', 'r' => 'RESTRICT', 'd' => 'SET DEFAULT'}
 
-      def foreign_keys(table_name)
+      def foreign_keys(table_name_with_or_without_schema_name)
+
+        table_name, _schema_name, namespace_name = get_db_object_names(table_name_with_or_without_schema_name)
+
         fk_info = select_all %{
           SELECT t2.relname AS to_table
                , a1.attname AS column
@@ -24,7 +27,7 @@ module Foreigner
           JOIN pg_namespace t3 ON c.connamespace = t3.oid
           WHERE c.contype = 'f'
             AND t1.relname = '#{table_name}'
-            AND t3.nspname = ANY (current_schemas(false))
+            AND t3.nspname = #{namespace_name}
           ORDER BY c.conname
         }
 
@@ -49,7 +52,7 @@ module Foreigner
           extras << 'NOT VALID'                  if row['valid'] == 'f'
           options[:options] = extras.join(" ")
 
-          ForeignKeyDefinition.new(table_name, row['to_table'], options)
+          ForeignKeyDefinition.new(table_name_with_or_without_schema_name, row['to_table'], options)
         end
       end
     end
