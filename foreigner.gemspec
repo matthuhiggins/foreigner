@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project = 'foreigner'
 
   s.files = %w(MIT-LICENSE Rakefile README.md) + Dir['lib/**/*.rb'] + Dir['test/**/*.rb']
-  s.add_dependency('activerecord', '>= 3.0.0')
+  s.add_dependency('activerecord', '>= 3.0.0', '< 4.2.0')
   s.add_development_dependency('rake')
   s.add_development_dependency('mocha')
 end
