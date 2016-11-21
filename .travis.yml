@@ -1,9 +1,23 @@
 rvm:
   - 1.9.3
+  - 2.0.0
+  - 2.1.0
 
 gemfile:
-  - ci/Gemfile.activerecord-4.1.x
-  - ci/Gemfile.activerecord-4.0.x
-  - ci/Gemfile.activerecord-3.2.x
-  - ci/Gemfile.activerecord-3.1.x
-  - ci/Gemfile.activerecord-3.0.x
+  - gemfiles/activerecord-3.0.gemfile
+  - gemfiles/activerecord-3.1.gemfile
+  - gemfiles/activerecord-3.2.gemfile
+  - gemfiles/activerecord-4.0.gemfile
+  - gemfiles/activerecord-4.1.gemfile
+  - gemfiles/activerecord-edge.gemfile
+
+cache: bundler
+script: bundle exec rake
+before_install:
+ - gem install bundler
+ - bundle install
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - gemfile: gemfiles/activerecord_edge.gemfile
