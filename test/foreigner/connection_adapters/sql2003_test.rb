@@ -71,6 +71,14 @@ class Foreigner::Sql2003Test < Foreigner::UnitTest
     )
   end
 
+  test 'add_with_composite_column_and_key' do
+    assert_equal(
+      "ALTER TABLE `users` ADD CONSTRAINT `users_primary_phone_id_id_fk` FOREIGN KEY (`primary_phone_id`, `id`) REFERENCES `phones_users`(phone_id, user_id)",
+      @adapter.add_foreign_key(:users, :phones_users, column: [
+      'primary_phone_id', 'id'], primary_key: ['phone_id', 'user_id'])
+    )
+  end
+
   test 'add_with_column_and_name' do
     assert_equal(
       "ALTER TABLE `employees` ADD CONSTRAINT `favorite_company_fk` FOREIGN KEY (`last_employer_id`) REFERENCES `companies`(id)",
@@ -144,6 +152,13 @@ class Foreigner::Sql2003Test < Foreigner::UnitTest
     assert_equal(
       "ALTER TABLE `suppliers` DROP CONSTRAINT `suppliers_ship_to_id_fk`",
       @adapter.remove_foreign_key(:suppliers, column: "ship_to_id")
+    )
+  end
+
+  test 'remove_by_composite_key' do
+    assert_equal(
+      "ALTER TABLE `users` DROP CONSTRAINT `users_primary_phone_id_id_fk`",
+      @adapter.remove_foreign_key(:users, column: ['primary_phone_id', 'id'])
     )
   end
 end

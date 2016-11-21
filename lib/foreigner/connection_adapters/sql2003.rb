@@ -25,15 +25,26 @@ module Foreigner
       end
 
       def add_foreign_key_sql(from_table, to_table, options = {})
-        column  = options[:column] || "#{to_table.to_s.singularize}_id"
-        foreign_key_name = options.key?(:name) ? options[:name].to_s : foreign_key_name(from_table, column)
-        primary_key = options[:primary_key] || "id"
+	columns = options[:column]
+	unless columns.is_a? Array
+	  columns = [ options[:column] || "#{to_table.to_s.singularize}_id" ]
+	end
+
+        primary_key = options[:primary_key]
+	
+	unless primary_key.is_a? Array
+	  primary_key = [ options[:primary_key] || "id" ]
+	end
+
+        foreign_key_name = options.key?(:name) ? options[:name].to_s : foreign_key_name(from_table, columns)
         dependency = dependency_sql(options[:dependent])
+
+	columns.collect! {|c| quote_column_name(c) }
 
         sql =
           "ADD CONSTRAINT #{quote_column_name(foreign_key_name)} " +
-          "FOREIGN KEY (#{quote_column_name(column)}) " +
-          "REFERENCES #{quote_proper_table_name(to_table)}(#{primary_key})"
+          "FOREIGN KEY (#{columns.join(', ')}) " +
+          "REFERENCES #{quote_proper_table_name(to_table)}(#{primary_key.join(', ')})"
         sql << " #{dependency}" if dependency.present?
         sql << " #{options[:options]}" if options[:options]
 
@@ -68,7 +79,11 @@ module Foreigner
 
       private
         def foreign_key_name(from_table, column)
-          "#{from_table}_#{column}_fk"
+	  if column.is_a? Array
+	    "#{from_table}_#{column.join('_')}_fk"
+	  else
+	    "#{from_table}_#{column}_fk"
+	  end
         end
 
         def foreign_key_column(to_table)
