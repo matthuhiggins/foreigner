@@ -19,9 +19,9 @@ module Foreigner
           WHERE fk.referenced_column_name is not null
             AND fk.table_schema = '#{@config[:database]}'
             AND fk.table_name = '#{table_name}'
-        }
+        }, 'SCHEMA'
 
-        create_table_info = select_one("SHOW CREATE TABLE #{quote_table_name(table_name)}")["Create Table"]
+        create_table_info = select_one("SHOW CREATE TABLE #{quote_table_name(table_name)}", 'SCHEMA')["Create Table"]
 
         fk_info.map do |row|
           options = {column: row['column'], name: row['name'], primary_key: row['primary_key']}
