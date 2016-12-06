@@ -2,6 +2,7 @@ rvm:
   - 1.9.3
 
 gemfile:
+  - ci/Gemfile.activerecord-4.2.x
   - ci/Gemfile.activerecord-4.1.x
   - ci/Gemfile.activerecord-4.0.x
   - ci/Gemfile.activerecord-3.2.x
