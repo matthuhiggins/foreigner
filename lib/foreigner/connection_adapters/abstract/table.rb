@@ -1,5 +1,5 @@
 module Foreigner
-  module ConnectionAdapters    
+  module ConnectionAdapters
     module Table
       extend ActiveSupport::Concern
 
@@ -45,12 +45,6 @@ module Foreigner
       # Deprecated
       def references_with_foreign_keys(*args)
         options = args.extract_options!
-
-        if fk_options = options.delete(:foreign_key)
-          p ActiveSupport::Deprecation.send(:deprecation_message, caller,
-            ":foreign_key in t.references is deprecated. " \
-            "Use t.foreign_key instead")
-        end
 
         references_without_foreign_keys(*(args.dup << options))
       end
